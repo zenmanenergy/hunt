@@ -45,6 +45,7 @@ app.init = function () {
       DeviceMotionEvent.requestPermission()
         .then(permissionState => {
           if (permissionState === 'granted') {
+            document.getElementById("DeviceMotionMsg").innerHTML = "granted";
             window.addEventListener('devicemotion', (e) => {
               document.getElementById("DeviceMotionMsg").innerHTML = "DeviceMotion";
               var info, xyz = "[X, Y, Z]";
@@ -113,63 +114,63 @@ app.init = function () {
       // handle regular non iOS 13+ devices
     }
 
-  // var norm     = 0;
-  //   document.getElementById("devicemotion").innerHTML="?";
-  // if (window.DeviceOrientationEvent) {
-  //     document.getElementById("DeviceOrientationEvent").innerHTML="DeviceOrientationEvent";
-  //
-  // 		window.addEventListener("devicemotion", function( event ) {
-  //       document.getElementById("devicemotion").innerHTML="devicemotion";
-  // 			if (app.activatePodo){
-  // 				if ((podo.acc_norm.length < 2) || (podo.stepArr.length < 2))
-  // 				{
-  // 					//$("#gamma-angle").html(Math.round(2/(event.interval/1000)));
-  // 					podo.createTable(Math.round(2/(event.interval/1000)));
-  // 				} else {
-  // 					norm = podo.computeNorm(event.accelerationIncludingGravity.x, event.accelerationIncludingGravity.y, event.accelerationIncludingGravity.z);
-  // 					podo.acc_norm.push(norm);
-  //
-  // 					podo.update();
-  //
-  // 					podo.onStep(podo.acc_norm);
-  // 					podo.onSpeed();
-  // 					podo.onCalory();
-  //
-  // 					//app.dessin  = document.querySelector('#canvas');
-  // 					//app.context = app.dessin.getContext('2d');
-  // 					//podo.onDraw(app.context, app.widthCanvas, app.heightCanvas);
-  //
-  // 					if ((localStorage.podo_step !== 0) && (isNaN(podo.countStep) == 0))
-  // 					{
-  // 						app.podo_step = localStorage.podo_step = podo.countStep;
-  // 					};
-  // 					if ((localStorage.podo_speed !== 0) && (isNaN(podo.meanSpeed) == 0))
-  // 					{
-  // 						app.podo_speed = localStorage.podo_speed = podo.meanSpeed;
-  // 					};
-  // 					if ((localStorage.podo_calory !== 0) && (isNaN(podo.calory) == 0))
-  // 					{
-  // 						app.podo_calory = localStorage.podo_calory = podo.calory;
-  // 					};
-  //
-  // 					if (isNaN(podo.distance) == 0){
-  // 						document.getElementById("distance-number").innerHTML= Math.round(podo.distance/100)/1000;
-  // 					} else {
-  // 						document.getElementById("#distance-number").innerHTML=0;
-  // 					};
-  // 					if (isNaN(podo.meanSpeed) == 0){
-  // 						document.getElementById("speed-number").innerHTML=Math.round(podo.meanSpeed/1000*3600); //km/h
-  // 					} else {
-  // 						document.getElementById("speed-number").innerHTML=0;
-  // 					};
-  // 					if (isNaN(podo.calory) == 0){
-  // 						document.getElementById("calory-number").innerHTML=Math.round(podo.calory); //km/h
-  // 					} else {
-  // 						document.getElementById("calory-number").innerHTML=0;
-  // 					};
-  // 				};
-  // 			};
-  // 		}, false);
-  // 	};
+  var norm     = 0;
+    document.getElementById("devicemotion").innerHTML="?";
+  if (window.DeviceOrientationEvent) {
+      document.getElementById("DeviceOrientationEvent").innerHTML="DeviceOrientationEvent";
+
+  		window.addEventListener("devicemotion", function( event ) {
+        document.getElementById("devicemotion").innerHTML="devicemotion";
+  			if (app.activatePodo){
+  				if ((podo.acc_norm.length < 2) || (podo.stepArr.length < 2))
+  				{
+  					//$("#gamma-angle").html(Math.round(2/(event.interval/1000)));
+  					podo.createTable(Math.round(2/(event.interval/1000)));
+  				} else {
+  					norm = podo.computeNorm(event.accelerationIncludingGravity.x, event.accelerationIncludingGravity.y, event.accelerationIncludingGravity.z);
+  					podo.acc_norm.push(norm);
+
+  					podo.update();
+
+  					podo.onStep(podo.acc_norm);
+  					podo.onSpeed();
+  					podo.onCalory();
+
+  					//app.dessin  = document.querySelector('#canvas');
+  					//app.context = app.dessin.getContext('2d');
+  					//podo.onDraw(app.context, app.widthCanvas, app.heightCanvas);
+
+  					if ((localStorage.podo_step !== 0) && (isNaN(podo.countStep) == 0))
+  					{
+  						app.podo_step = localStorage.podo_step = podo.countStep;
+  					};
+  					if ((localStorage.podo_speed !== 0) && (isNaN(podo.meanSpeed) == 0))
+  					{
+  						app.podo_speed = localStorage.podo_speed = podo.meanSpeed;
+  					};
+  					if ((localStorage.podo_calory !== 0) && (isNaN(podo.calory) == 0))
+  					{
+  						app.podo_calory = localStorage.podo_calory = podo.calory;
+  					};
+
+  					if (isNaN(podo.distance) == 0){
+  						document.getElementById("distance-number").innerHTML= Math.round(podo.distance/100)/1000;
+  					} else {
+  						document.getElementById("#distance-number").innerHTML=0;
+  					};
+  					if (isNaN(podo.meanSpeed) == 0){
+  						document.getElementById("speed-number").innerHTML=Math.round(podo.meanSpeed/1000*3600); //km/h
+  					} else {
+  						document.getElementById("speed-number").innerHTML=0;
+  					};
+  					if (isNaN(podo.calory) == 0){
+  						document.getElementById("calory-number").innerHTML=Math.round(podo.calory); //km/h
+  					} else {
+  						document.getElementById("calory-number").innerHTML=0;
+  					};
+  				};
+  			};
+  		}, false);
+  	};
 
 };
