@@ -2,25 +2,35 @@
 <head>
   <script type="text/javascript">
     function requestOrientationPermission(){
+      alert('request');
         DeviceOrientationEvent.requestPermission()
         .then(response => {
             if (response == 'granted') {
                 window.addEventListener('deviceorientation', (e) => {
                     // do something with e
-                    acceleration = e.accelerationIncludingGravity;
-                      document.getElementById("accelX").innerHTML = acceleration.x;
-                        document.getElementById("accelY").innerHTML = acceleration.y;
-                          document.getElementById("accelZ").innerHTML = acceleration.z;
+                    motionEvent(e);
 
                 })
             }
         })
         .catch(console.error)
     }
+
+    function motionEvent(e){
+      alert('motion!');
+      // acceleration = e.accelerationIncludingGravity;
+      //   document.getElementById("accelX").innerHTML = acceleration.x;
+      //     document.getElementById("accelY").innerHTML = acceleration.y;
+      //       document.getElementById("accelZ").innerHTML = acceleration.z;
+    }
+    function init(){
+      alert('page init');
+      requestOrientationPermission();
+    }
   </script>
 </head>
 
-<body onload="requestOrientationPermission();">
+<body onload="init();">
   <h2>Device Motion</h2>
   <table>
     <tr>
