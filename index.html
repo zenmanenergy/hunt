@@ -2,11 +2,33 @@
 <head>
   <script type="text/javascript">
     function requestOrientationPermission(){
-      alert('request');
+      alert('request orientation');
         DeviceOrientationEvent.requestPermission()
         .then(response => {
             if (response == 'granted') {
                 window.addEventListener('deviceorientation', (e) => {
+                    // do something with e
+                    orientationEvent(e);
+
+                })
+            }
+        })
+        .catch(console.error)
+    }
+    function orientationEvent(e){
+      document.getElementById("DeviceOrientationMsg").innerHTML = "DeviceOrientation";
+      document.getElementById("doTiltLR").innerHTML = Math.round(e.gamma);
+      document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
+      document.getElementById("doDirection").innerHTML = Math.round(e.alpha);
+    }
+
+
+    function requestMotionPermission(){
+      alert('request motion');
+        DeviceMotionEvent.requestPermission()
+        .then(response => {
+            if (response == 'granted') {
+                window.addEventListener('devicemotion', (e) => {
                     // do something with e
                     motionEvent(e);
 
@@ -17,20 +39,40 @@
     }
 
     function motionEvent(e){
-      alert('motion!');
-      // acceleration = e.accelerationIncludingGravity;
-      //   document.getElementById("accelX").innerHTML = acceleration.x;
-      //     document.getElementById("accelY").innerHTML = acceleration.y;
-      //       document.getElementById("accelZ").innerHTML = acceleration.z;
+      acceleration = e.accelerationIncludingGravity;
+        document.getElementById("accelX").innerHTML = acceleration.x;
+          document.getElementById("accelY").innerHTML = acceleration.y;
+            document.getElementById("accelZ").innerHTML = acceleration.z;
     }
     function init(){
       alert('page init');
-      requestOrientationPermission();
+      requestMotionPermission();
     }
   </script>
 </head>
 
 <body onload="init();">
+
+  <h2>Device Orientation</h2>
+  <table>
+    <tr>
+      <td>Event Supported</td>
+      <td id="DeviceOrientationMsg"></td>
+    </tr>
+    <tr>
+      <td>Tilt Left/Right [gamma]</td>
+      <td id="doTiltLR"></td>
+    </tr>
+    <tr>
+      <td>Tilt Front/Back [beta]</td>
+      <td id="doTiltFB"></td>
+    </tr>
+    <tr>
+      <td>Direction [alpha]</td>
+      <td id="doDirection"></td>
+    </tr>
+
+   </table>
   <h2>Device Motion</h2>
   <table>
     <tr>
