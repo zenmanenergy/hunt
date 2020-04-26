@@ -1,0 +1,290 @@
+<html>
+<head>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <script>
+    // Initialize and add the map
+
+    var id, target, options;
+
+
+
+    var app={};
+    app.watchGPS=function (){
+      console.log("watchGPS");
+      latitude : 0,
+        target = {
+        longitude: 0
+      };
+
+      options = {
+        enableHighAccuracy: false,
+        timeout: 5000,
+        maximumAge: 0
+      };
+
+      id = navigator.geolocation.watchPosition(success, error, options);
+    }
+
+    function success(pos) {
+      var crd = pos.coords;
+      console.log(pos);
+      document.getElementById("lat").innerHTML=crd.latitude;
+      document.getElementById("lng").innerHTML=crd.longitude;
+      // if (target.latitude === crd.latitude && target.longitude === crd.longitude) {
+      //   console.log('Congratulations, you reached the target');
+      //   navigator.geolocation.clearWatch(id);
+      // }
+    }
+
+    function error(err) {
+      document.getElementById("doEvent").innerHTML+='ERROR(' + err.code + '): ' + err.message;
+    }
+    app.watchOrientation=function(){
+      console.log("watchOrientation");
+      if (window.DeviceOrientationEvent) {
+        document.getElementById("doEvent").innerHTML = "DeviceOrientation";
+        // Listen for the deviceorientation event and handle the raw data
+        window.addEventListener('deviceorientation', function(eventData) {
+          document.getElementById("doEvent").innerHTML = "check";
+          console.log(eventData);
+          // gamma is the left-to-right tilt in degrees, where right is positive
+          var tiltLR = eventData.gamma;
+
+          // beta is the front-to-back tilt in degrees, where front is positive
+          var tiltFB = eventData.beta;
+
+          // alpha is the compass direction the device is facing in degrees
+          var dir = eventData.alpha
+
+          // call our orientation event handler
+          deviceOrientationHandler(tiltLR, tiltFB, dir);
+        }, false);
+      } else {
+        document.getElementById("doEvent").innerHTML = "Not supported."
+      }
+    }
+    function watchOrientation(){
+        DeviceOrientationEvent.requestPermission()
+        .then(response => {
+            if (response == 'granted') {
+                window.addEventListener('deviceorientation', (e) => {
+                    // do something with e
+                      document.getElementById("DeviceOrientationMsg").innerHTML = "DeviceOrientation";
+                      document.getElementById("doTiltLR").innerHTML = Math.round(e.gamma);
+                      document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
+                      document.getElementById("doDirection").innerHTML = Math.round(e.alpha);
+                })
+            }
+        })
+        .catch(console.error)
+    }
+    var oldAcceleration = [0, 0, 0];
+			var isChange = 0;
+			var stepCount = 0;
+			var scrollAmount = 30;
+    function watchMotion(){
+      if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        DeviceMotionEvent.requestPermission()
+          .then(permissionState => {
+            if (permissionState === 'granted') {
+              window.addEventListener('devicemotion', (e) => {
+                document.getElementById("DeviceMotionMsg").innerHTML = "DeviceMotion";
+                var info, xyz = "[X, Y, Z]";
+                var acceleration = e.acceleration;
+                info = xyz.replace("X", acceleration.x);
+                info = info.replace("Y", acceleration.y);
+                info = info.replace("Z", acceleration.z);
+                document.getElementById("moAccel").innerHTML = info;
+
+                acceleration = e.accelerationIncludingGravity;
+                info = xyz.replace("X", acceleration.x);
+                info = info.replace("Y", acceleration.y);
+                info = info.replace("Z", acceleration.z);
+                document.getElementById("moAccelGrav").innerHTML = info;
+
+                // Grab the rotation rate from the results
+                var rotation = e.rotationRate;
+                info = xyz.replace("X", rotation.alpha);
+                info = info.replace("Y", rotation.beta);
+                info = info.replace("Z", rotation.gamma);
+                document.getElementById("moRotation").innerHTML = info;
+
+
+                info = e.interval;
+                document.getElementById("moInterval").innerHTML = info;
+                // compare with old acceleration
+        				var dot = 	(oldAcceleration.x * acceleration.x) +
+        							(oldAcceleration.y * acceleration.y) +
+        							(oldAcceleration.z * acceleration.z);
+
+        				var a = Math.abs(Math.sqrt(		Math.pow(oldAcceleration.x,2) +
+        												Math.pow(oldAcceleration.y,2) +
+        												Math.pow(oldAcceleration.z,2)));
+
+        				var b = Math.abs(Math.sqrt(		Math.pow(acceleration.x,2) +
+        												Math.pow(acceleration.y,2) +
+        												Math.pow(acceleration.z,2)));
+
+        				dot /= (a * b);
+
+        				//console.log(dot);
+
+        				if(dot <= 0.994 && dot > 0.90){ //bounce
+        					//console.log("bounce");
+        					//console.log("step count: " + stepCount + ", isChange: " + isChange);
+        					if(isChange == 0){
+        						stepCount+=1;
+        						stepDetected();
+        					} else {
+        						if(isChange == 3){
+        							isChange = -1;
+        						}
+        					}
+        					isChange+=1;
+        				}
+        				// set old acceleration to current
+        				oldAcceleration = acceleration;
+
+        				// display step count
+        				document.getElementById("moStepCount").innerHTML = stepCount;
+              });
+            }
+          })
+          .catch(console.error);
+      } else {
+        // handle regular non iOS 13+ devices
+      }
+    }
+
+    function stepDetected(){
+			var s = $('body').scrollTop();
+			console.log(s);
+			s += 80;
+			$('body').animate({
+				scrollTop: "+=" + scrollAmount
+			}, 500);
+		}
+    function deviceMotionHandler(eventData) {
+      console.log("deviceMotionHandler",eventData);
+      var info, xyz = "[X, Y, Z]";
+
+      // Grab the acceleration from the results
+      var acceleration = eventData.acceleration;
+      info = xyz.replace("X", acceleration.x);
+      info = info.replace("Y", acceleration.y);
+      info = info.replace("Z", acceleration.z);
+      document.getElementById("moAccel").innerHTML = info;
+
+      // Grab the acceleration including gravity from the results
+      acceleration = eventData.accelerationIncludingGravity;
+      info = xyz.replace("X", acceleration.x);
+      info = info.replace("Y", acceleration.y);
+      info = info.replace("Z", acceleration.z);
+      document.getElementById("moAccelGrav").innerHTML = info;
+
+      // Grab the rotation rate from the results
+      var rotation = eventData.rotationRate;
+      info = xyz.replace("X", rotation.alpha);
+      info = info.replace("Y", rotation.beta);
+      info = info.replace("Z", rotation.gamma);
+      document.getElementById("moRotation").innerHTML = info;
+
+      // // Grab the refresh interval from the results
+      info = eventData.interval;
+      document.getElementById("moInterval").innerHTML = info;
+    }
+
+
+    app.load=function(){
+      watchOrientation();
+        watchMotion();
+      //app.getpermission();
+      // app.watchGPS();
+      // app.watchOrientation();
+      // app.watchMotion();
+
+    }
+    </script>
+
+    <style media="screen">
+        body{
+          font-size:50px;
+        }
+        td{font-size:50px;}
+    </style>
+    </head>
+    <body onload="app.load();">
+
+      <button onclick='requestOrientationPermission();'>Request orientation permission</button>
+
+      <div class="main">
+        <h2>Device Orientation</h2>
+        <table>
+          <tr>
+            <td>Event Supported</td>
+            <td id="DeviceOrientationMsg"></td>
+          </tr>
+          <tr>
+            <td>Tilt Left/Right [gamma]</td>
+            <td id="doTiltLR"></td>
+          </tr>
+          <tr>
+            <td>Tilt Front/Back [beta]</td>
+            <td id="doTiltFB"></td>
+          </tr>
+          <tr>
+            <td>Direction [alpha]</td>
+            <td id="doDirection"></td>
+          </tr>
+
+         </table>
+
+         <div class="main">
+  <h2>Device Motion</h2>
+  <table>
+    <tr>
+      <td>Event Supported</td>
+      <td id="DeviceMotionMsg"></td>
+    </tr>
+
+    <tr>
+      <td>step</td>
+      <td id="moStepCount"></td>
+    </tr>
+    <tr>
+      <td>acceleration</td>
+      <td id="moAccel"></td>
+    </tr>
+    <tr>
+      <td>accelerationIncludingGravity</td>
+      <td id="moAccelGrav"></td>
+    </tr>
+    <tr>
+      <td>rotationRate</td>
+      <td id="moRotation"></td>
+    </tr>
+    <tr>
+      <td>interval</td>
+      <td id="moInterval"></td>
+    </tr>
+  </table>
+<h2>Location</h2>
+<table>
+
+  <tr>
+    <td >Lat</td>
+    <td id="lat"></td>
+    </tr>
+    <tr>
+      <td >Lng</td>
+      <td id="lng"></td>
+      </tr>
+    </table>
+
+</div>
+      </div>
+
+  </body>
+</html>
