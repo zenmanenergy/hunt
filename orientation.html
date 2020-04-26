@@ -1,4 +1,6 @@
-<script type="text/javascript">
+<html>
+<head>
+  <script type="text/javascript">
     function requestOrientationPermission(){
         DeviceOrientationEvent.requestPermission()
         .then(response => {
@@ -10,6 +12,11 @@
         })
         .catch(console.error)
     }
-</script>
+  </script>
+</head>
 
-<button onclick='requestOrientationPermission();'>Request orientation permission</button>
+<body onload="requestOrientationPermission();">
+
+
+</body>
+</html>
