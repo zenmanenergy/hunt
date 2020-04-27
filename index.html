@@ -52,13 +52,14 @@
       document.getElementById("doTiltLR").innerHTML = Math.round(e.gamma);
       document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
       document.getElementById("doDirection").innerHTML = Math.round(e.alpha);
-      if (Math.round(e.alpha) > 0 && Math.round(e.alpha) <= 45){
-        heading = 360 - (latitude-Math.round(e.alpha));
-
-      } else{
-        heading = Math.round(e.alpha) - latitude;
-
-      }
+      heading = Math.round(e.alpha);
+      // if (Math.round(e.alpha) > 0 && Math.round(e.alpha) <= 45){
+      //   heading = 360 - (latitude-Math.round(e.alpha));
+      //
+      // } else{
+      //   heading = Math.round(e.alpha) - latitude;
+      //
+      // }
       headingEasy="";
       if ((heading >= 315 && heading < 360) || (heading >= 0 && heading < 45)){
         headingEasy="N";
