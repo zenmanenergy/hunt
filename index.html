@@ -1,28 +1,15 @@
 <html>
 <head>
+
+  <script src="js/podo.js" type="text/javascript" charset="utf-8" defer></script>
   <script type="text/javascript">
     var latitude, longitude;
 
 
     var app={};
-    var podo=new Pedometer();
+    var podo;
 
-    app.podo_stepSize = localStorage.podo_stepSize || 50;
-    app.podo_weight = localStorage.podo_weight || 70;
-  	app.podo_step = localStorage.podo_step || 0;
-  	app.podo_speed = localStorage.podo_speed || 0;
-  	app.podo_calory = localStorage.podo_calory || 0;
-  	app.isGPSEnabled = localStorage.isGPSEnabled || false;
 
-  	//init pedometer
-  	podo.setCountStep(Math.round(app.podo_step));
-  	podo.setWeight(Math.round(app.podo_weight));
-  	podo.setStepSize(Math.round(app.podo_stepSize));
-  	podo.setMeanSpeed(Math.round(app.podo_speed*1000.)/1000.);
-  	podo.setCalory(Math.round(app.podo_calory*1000.)/1000.);
-  	podo.setIsGPSEnabled(Boolean(app.isGPSEnabled));
-
-  	app.activatePodo = 1;
 
     function getGPS(){
       var options = {
@@ -126,7 +113,7 @@
           podo.update();
 
           podo.onStep(podo.acc_norm);
-          
+
 
           document.getElementById("acc_norm").innerHTML= podo.acc_norm;
 
@@ -140,9 +127,30 @@
       };
     }
     function init(){
+      app.podo_stepSize = localStorage.podo_stepSize || 50;
+      app.podo_weight = localStorage.podo_weight || 70;
+    	app.podo_step = localStorage.podo_step || 0;
+    	app.podo_speed = localStorage.podo_speed || 0;
+    	app.podo_calory = localStorage.podo_calory || 0;
+    	app.isGPSEnabled = localStorage.isGPSEnabled || false;
+
+      podo = new Pedometer();
+    	//init pedometer
+    	podo.setCountStep(Math.round(app.podo_step));
+    	podo.setWeight(Math.round(app.podo_weight));
+    	podo.setStepSize(Math.round(app.podo_stepSize));
+    	podo.setMeanSpeed(Math.round(app.podo_speed*1000.)/1000.);
+    	podo.setCalory(Math.round(app.podo_calory*1000.)/1000.);
+    	podo.setIsGPSEnabled(Boolean(app.isGPSEnabled));
+
+    	app.activatePodo = 1;
+
       getGPS();
       requestMotionPermission();
       requestOrientationPermission();
+
+
+
     }
   </script>
 </head>
