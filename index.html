@@ -8,7 +8,7 @@
 
     var app={};
     var podo;
-
+    var compass;
 
 
     function getGPS(){
@@ -41,43 +41,7 @@
        document.getElementById("lng").innerHTML = longitude;
     }
 
-    function requestOrientationPermission(){
-        DeviceOrientationEvent.requestPermission()
-        .then(response => {
-            if (response == 'granted') {
-                window.addEventListener('deviceorientation', (e) => {
-                    // do something with e
-                    orientationEvent(e);
 
-                })
-            }
-        })
-        .catch(console.error)
-    }
-    function orientationEvent(e){
-      document.getElementById("DeviceOrientationMsg").innerHTML = "DeviceOrientation";
-      document.getElementById("doTiltLR").innerHTML = Math.round(e.gamma);
-      document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
-      document.getElementById("doDirection").innerHTML = 360-Math.round(e.alpha);
-      heading = 360-Math.round(e.alpha);
-
-      headingEasy="";
-      if ((heading >= 315 && heading < 360) || (heading >= 0 && heading < 45)){
-        headingEasy="N";
-      }
-      else if (heading >= 45 && heading < 135) {
-        headingEasy="E";
-      }
-      else if (heading >= 135 && heading < 225){
-        headingEasy="S";
-      }
-      else if (heading >= 225 && heading < 315){
-        headingEasy="W";
-      }
-      document.getElementById("heading").innerHTML = heading;
-      document.getElementById("headingEasy").innerHTML = headingEasy;
-
-    }
 
 
     function requestMotionPermission(){
@@ -118,7 +82,7 @@
           document.getElementById("acc_norm").innerHTML= podo.acc_norm;
 
           if (isNaN(podo.distance) == 0){
-            document.getElementById("distance").innerHTML= Math.round(podo.distance/100)/1000;
+            document.getElementById("distance").innerHTML= Math.round(podo.distance/100) + "meters";
           } else {
             document.getElementById("distance").innerHTML=0;
           };
@@ -147,8 +111,9 @@
 
       getGPS();
       requestMotionPermission();
-      requestOrientationPermission();
-
+      //requestOrientationPermission();
+      compass=new Compass();
+      compass.requestOrientationPermission();
 
 
     }
