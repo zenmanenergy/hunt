@@ -2,6 +2,28 @@
 <head>
   <script type="text/javascript">
     var latitude, longitude;
+
+
+    var app={};
+    var podo=new Pedometer();
+
+    app.podo_stepSize = localStorage.podo_stepSize || 50;
+    app.podo_weight = localStorage.podo_weight || 70;
+  	app.podo_step = localStorage.podo_step || 0;
+  	app.podo_speed = localStorage.podo_speed || 0;
+  	app.podo_calory = localStorage.podo_calory || 0;
+  	app.isGPSEnabled = localStorage.isGPSEnabled || false;
+
+  	//init pedometer
+  	podo.setCountStep(Math.round(app.podo_step));
+  	podo.setWeight(Math.round(app.podo_weight));
+  	podo.setStepSize(Math.round(app.podo_stepSize));
+  	podo.setMeanSpeed(Math.round(app.podo_speed*1000.)/1000.);
+  	podo.setCalory(Math.round(app.podo_calory*1000.)/1000.);
+  	podo.setIsGPSEnabled(Boolean(app.isGPSEnabled));
+
+  	app.activatePodo = 1;
+
     function getGPS(){
       var options = {
         enableHighAccuracy: false,
@@ -30,8 +52,6 @@
        longitude = position.coords.longitude;
        document.getElementById("lat").innerHTML = latitude;
        document.getElementById("lng").innerHTML = longitude;
-
-       //alert("Latitude : " + latitude + " Longitude: " + longitude);
     }
 
     function requestOrientationPermission(){
@@ -53,13 +73,7 @@
       document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
       document.getElementById("doDirection").innerHTML = 360-Math.round(e.alpha);
       heading = 360-Math.round(e.alpha);
-      // if (Math.round(e.alpha) > 0 && Math.round(e.alpha) <= 45){
-      //   heading = 360 - (latitude-Math.round(e.alpha));
-      //
-      // } else{
-      //   heading = Math.round(e.alpha) - latitude;
-      //
-      // }
+
       headingEasy="";
       if ((heading >= 315 && heading < 360) || (heading >= 0 && heading < 45)){
         headingEasy="N";
@@ -100,6 +114,30 @@
       document.getElementById("accelX").innerHTML = acceleration.x;
       document.getElementById("accelY").innerHTML = acceleration.y;
       document.getElementById("accelZ").innerHTML = acceleration.z;
+
+      if (app.activatePodo){
+        if ((podo.acc_norm.length < 2) || (podo.stepArr.length < 2))
+        {
+          podo.createTable(Math.round(2/(event.interval/1000)));
+        } else {
+          norm = podo.computeNorm(e.accelerationIncludingGravity.x, e.accelerationIncludingGravity.y, e.accelerationIncludingGravity.z);
+          podo.acc_norm.push(norm);
+
+          podo.update();
+
+          podo.onStep(podo.acc_norm);
+          
+
+          document.getElementById("acc_norm").innerHTML= podo.acc_norm;
+
+          if (isNaN(podo.distance) == 0){
+            document.getElementById("distance").innerHTML= Math.round(podo.distance/100)/1000;
+          } else {
+            document.getElementById("distance").innerHTML=0;
+          };
+
+        };
+      };
     }
     function init(){
       getGPS();
@@ -178,6 +216,19 @@
       <td>interval</td>
       <td id="moInterval">-</td>
     </tr>
+    <tr>
+      <td>acc_norm</td>
+      <td id="acc_norm">-</td>
+    </tr>
+    <tr>
+      <td>steps</td>
+      <td id="steps">-</td>
+    </tr>
+    <tr>
+      <td>distance</td>
+      <td id="distance">-</td>
+    </tr>
+
   </table>
 
 </body>
