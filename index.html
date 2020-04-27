@@ -31,11 +31,10 @@
        document.getElementById("lat").innerHTML = latitude;
        document.getElementById("lng").innerHTML = longitude;
 
-       alert("Latitude : " + latitude + " Longitude: " + longitude);
+       //alert("Latitude : " + latitude + " Longitude: " + longitude);
     }
 
     function requestOrientationPermission(){
-      alert('request orientation');
         DeviceOrientationEvent.requestPermission()
         .then(response => {
             if (response == 'granted') {
@@ -53,7 +52,13 @@
       document.getElementById("doTiltLR").innerHTML = Math.round(e.gamma);
       document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
       document.getElementById("doDirection").innerHTML = Math.round(e.alpha);
-      heading = Math.round(e.alpha) - latitude;
+      if (heading > 0){
+        heading = 360 - (latitude-Math.round(e.alpha));
+
+      } else{
+        heading = Math.round(e.alpha) - latitude;
+
+      }
       headingEasy="";
       if ((heading >= 315 && heading < 360) || (heading >= 0 && heading < 45)){
         headingEasy="N";
@@ -74,7 +79,6 @@
 
 
     function requestMotionPermission(){
-      alert('request motion');
         DeviceMotionEvent.requestPermission()
         .then(response => {
             if (response == 'granted') {
