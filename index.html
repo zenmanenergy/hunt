@@ -54,6 +54,21 @@
       document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
       document.getElementById("doDirection").innerHTML = Math.round(e.alpha);
       heading = Math.round(e.alpha) - latitude;
+      headingEasy="";
+      if ((heading >= 315 && heading < 360) || (heading >= 0 && heading < 45){
+        headingEasy="N";
+      }
+      if ((heading >= 45 && heading < 135) {
+        headingEasy="E";
+      }
+      if ((heading >= 135 && heading < 225){
+        headingEasy="S";
+      }
+      if ((heading >= 225 && heading < 315){
+        headingEasy="W";
+      }
+      document.getElementById("heading").innerHTML = heading;
+      document.getElementById("headingEasy").innerHTML = headingEasy;
 
     }
 
@@ -122,8 +137,12 @@
       <td id="doDirection">-</td>
     </tr>
     <tr>
-      <td>Direction</td>
+      <td>Heading</td>
       <td id="heading">-</td>
+    </tr>
+    <tr>
+      <td>Heading Easy</td>
+      <td id="headingEasy">-</td>
     </tr>
 
    </table>
