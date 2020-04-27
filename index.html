@@ -110,10 +110,15 @@
       compass.onError=function(type, message, error){
         console.log(type +" ERROR!" ,message, error);
       }
-      compass.onChange=function(heading, cardinalDirection, interCardinalDirection){
+      compass.onChange=function(heading, cardinalDirection, interCardinalDirection, eventData){
         document.getElementById("heading").innerHTML = heading;
         document.getElementById("cardinalDirection").innerHTML = cardinalDirection;
         document.getElementById("interCardinalDirection").innerHTML = interCardinalDirection;
+        keys="";
+        for (var i in eventData){
+          keys += " " + i;
+        }
+        document.getElementById("DeviceOrientationMsg").innerHTML = i
       }
 
       pedometer=new Pedometer();
