@@ -1,10 +1,12 @@
 
 function Compass(){
-
+  this.hasPermission=false;
+  this.errorMessage;
   this.requestOrientationPermission = function (){
       DeviceOrientationEvent.requestPermission()
       .then(response => {
           if (response == 'granted') {
+            this.hasPermission=true;
               window.addEventListener('deviceorientation', (e) => {
                   // do something with e
                   //orientationEvent(e);
@@ -33,9 +35,5 @@ function Compass(){
           }
       })
       .catch(console.error)
-  }
-  this.orientationEvent=function (e){
-
-
   }
 }
