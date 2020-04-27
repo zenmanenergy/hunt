@@ -3,4 +3,8 @@ function Pedometer(){
   //doesn't allow callback functions to access the parent object.
   var parent = this;
 
+  this.init=function(){
+
+  };
+
 }

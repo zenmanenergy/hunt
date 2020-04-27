@@ -52,7 +52,7 @@ function Kalman() {
 	};
 };
 
-function Pedometer() {
+function PedometerORIG() {
 	this.acc_norm = new Array(); // amplitude of the acceleration
 
 	this.var_acc   = 0.; // variance of the acceleration on the window L

@@ -3,6 +3,8 @@
 
   <script src="js/gps.js" type="text/javascript" charset="utf-8" defer></script>
   <script src="js/compass.js" type="text/javascript" charset="utf-8" defer></script>
+
+  <script src="js/pedometer.js" type="text/javascript" charset="utf-8" defer></script>
   <script src="js/podo.js" type="text/javascript" charset="utf-8" defer></script>
   <script type="text/javascript">
     var latitude, longitude;
@@ -12,6 +14,7 @@
     var podo;
     var compass;
     var gps;
+    var pedometer;
 
 
 
@@ -79,7 +82,7 @@
     	app.podo_calory = localStorage.podo_calory || 0;
     	app.isGPSEnabled = localStorage.isGPSEnabled || false;
 
-      podo = new Pedometer();
+      podo = new PedometerORIG();
     	//init pedometer
     	podo.setCountStep(Math.round(app.podo_step));
     	podo.setWeight(Math.round(app.podo_weight));
@@ -107,12 +110,14 @@
       compass.onError=function(type, message, error){
         console.log(type +" ERROR!" ,message, error);
       }
-      compass.onChange=function(heading, cardinalDirection, interCardinalDirection){
-        document.getElementById("heading").innerHTML = heading;
-        document.getElementById("cardinalDirection").innerHTML = cardinalDirection;
-        document.getElementById("interCardinalDirection").innerHTML = interCardinalDirection;
-      }
+      // compass.onChange=function(heading, cardinalDirection, interCardinalDirection){
+      //   document.getElementById("heading").innerHTML = heading;
+      //   document.getElementById("cardinalDirection").innerHTML = cardinalDirection;
+      //   document.getElementById("interCardinalDirection").innerHTML = interCardinalDirection;
+      // }
 
+      pedometer=new Pedometer();
+      pedometer.init();
     }
   </script>
 </head>

@@ -11,6 +11,7 @@ function Compass(){
   this.onChange=function(heading, cardinalDirection, interCardinalDirection){
     console.log("[Compass]","compass.onChange event. This method can be overriden using: compass.onChange=function(latitude, longitude, accuracy, timestamp){} ")
     console.log(heading, cardinalDirection, interCardinalDirection);
+    alert(heading);
   };
   this.onError=function(type, message, error){
     console.log("[Compass]","compass.onError event. This method can be overriden using: compass.onError=function(type, message, error){} ");
@@ -62,6 +63,7 @@ function Compass(){
                   } else if ((parent.heading >= 292 && parent.heading < 337)){
                     parent.interCardinalDirection="NW";
                   }
+
                   parent.onChange(parent.heading, parent.cardinalDirection, parent.interCardinalDirection);
 
               })
