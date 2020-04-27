@@ -55,16 +55,16 @@
       document.getElementById("doDirection").innerHTML = Math.round(e.alpha);
       heading = Math.round(e.alpha) - latitude;
       headingEasy="";
-      if ((heading >= 315 && heading < 360) || (heading >= 0 && heading < 45){
+      if ((heading >= 315 && heading < 360) || (heading >= 0 && heading < 45)){
         headingEasy="N";
       }
-      if ((heading >= 45 && heading < 135) {
+      else if (heading >= 45 && heading < 135) {
         headingEasy="E";
       }
-      if ((heading >= 135 && heading < 225){
+      else if (heading >= 135 && heading < 225){
         headingEasy="S";
       }
-      if ((heading >= 225 && heading < 315){
+      else if (heading >= 225 && heading < 315){
         headingEasy="W";
       }
       document.getElementById("heading").innerHTML = heading;
