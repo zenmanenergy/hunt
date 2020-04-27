@@ -51,8 +51,8 @@
       document.getElementById("DeviceOrientationMsg").innerHTML = "DeviceOrientation";
       document.getElementById("doTiltLR").innerHTML = Math.round(e.gamma);
       document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
-      document.getElementById("doDirection").innerHTML = Math.round(e.alpha);
-      heading = Math.round(e.alpha);
+      document.getElementById("doDirection").innerHTML = 360-Math.round(e.alpha);
+      heading = 360-Math.round(e.alpha);
       // if (Math.round(e.alpha) > 0 && Math.round(e.alpha) <= 45){
       //   heading = 360 - (latitude-Math.round(e.alpha));
       //
