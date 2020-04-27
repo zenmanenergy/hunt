@@ -8,6 +8,7 @@ function Compass(){
   this.interCardinalDirection;
   this.heading;
   this.hasPermission=false;
+
   this.onChange=function(heading, cardinalDirection, interCardinalDirection){
     console.log("[Compass]","compass.onChange event. This method can be overriden using: compass.onChange=function(latitude, longitude, accuracy, timestamp){} ")
     console.log(heading, cardinalDirection, interCardinalDirection);
@@ -29,6 +30,8 @@ function Compass(){
                   document.getElementById("doTiltLR").innerHTML = Math.round(e.gamma);
                   document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
                   document.getElementById("doDirection").innerHTML = 360-Math.round(e.alpha);
+                  alert(e.webkitCompassHeading);
+                  alert(e.compassHeading);
                   parent.heading = 360-Math.round(e.alpha);
 
                   if ((parent.heading >= 315 && parent.heading < 360) || (parent.heading >= 0 && parent.heading < 45)){
