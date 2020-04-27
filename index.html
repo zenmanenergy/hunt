@@ -1,6 +1,24 @@
 <html>
 <head>
   <script type="text/javascript">
+
+    function getGPS(){
+      var options = {
+        enableHighAccuracy: false,
+        timeout: 5000,
+        maximumAge: 0
+      };
+
+      id = navigator.geolocation.getPosition(success, error, options);
+    }
+
+    function success(pos) {
+      var crd = pos.coords;
+      console.log(pos);
+      document.getElementById("lat").innerHTML=crd.latitude;
+      document.getElementById("lng").innerHTML=crd.longitude;
+    }
+
     function requestOrientationPermission(){
       alert('request orientation');
         DeviceOrientationEvent.requestPermission()
@@ -55,7 +73,19 @@
 </head>
 
 <body onload="init();">
+  <h2>Device Motion</h2>
+  <table>
+    <tr>
+      <td>Lat</td>
+      <td id="lat">-</td>
+    </tr>
 
+    <tr>
+      <td>lng</td>
+      <td id="lng">-</td>
+    </tr>
+
+  </table>
   <h2>Device Orientation</h2>
   <table>
     <tr>
