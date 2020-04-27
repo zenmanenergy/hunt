@@ -62,7 +62,7 @@ function Compass(){
                   } else if ((parent.heading >= 292 && parent.heading < 337)){
                     parent.interCardinalDirection="NW";
                   }
-                  parent.onChange(heading, cardinalDirection, interCardinalDirection);
+                  parent.onChange(parent.heading, parent.cardinalDirection, parent.interCardinalDirection);
 
               })
           }

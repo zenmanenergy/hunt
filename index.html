@@ -99,9 +99,9 @@
       gps.onError=function(type, message, error){
         console.log(type +" ERROR!" ,message, error);
       }
-      //
+
       requestMotionPermission();
-      //requestOrientationPermission();
+
       compass=new Compass();
       compass.init();
       compass.onError=function(type, message, error){
