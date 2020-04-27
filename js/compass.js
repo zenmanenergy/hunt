@@ -30,9 +30,8 @@ function Compass(){
                   document.getElementById("doTiltLR").innerHTML = Math.round(e.gamma);
                   document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
                   document.getElementById("doDirection").innerHTML = 360-Math.round(e.alpha);
-                  alert(e.webkitCompassHeading);
-                  alert(e.compassHeading);
-                  parent.heading = 360-Math.round(e.alpha);
+                  
+                  parent.heading = e.webkitCompassHeading;
 
                   if ((parent.heading >= 315 && parent.heading < 360) || (parent.heading >= 0 && parent.heading < 45)){
                     parent.cardinalDirection="N";
