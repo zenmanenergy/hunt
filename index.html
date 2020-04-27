@@ -1,6 +1,7 @@
 <html>
 <head>
 
+  <script src="js/gps.js" type="text/javascript" charset="utf-8" defer></script>
   <script src="js/compass.js" type="text/javascript" charset="utf-8" defer></script>
   <script src="js/podo.js" type="text/javascript" charset="utf-8" defer></script>
   <script type="text/javascript">
@@ -10,54 +11,33 @@
     var app={};
     var podo;
     var compass;
+    var gps;
 
 
-    function getGPS(){
-      var options = {
-        enableHighAccuracy: false,
-        timeout: 5000,
-        maximumAge: 0
-      };
 
-      if(navigator.geolocation) {
-
-         // timeout at 60000 milliseconds (60 seconds)
-         var options = {timeout:60000};
-         navigator.geolocation.getCurrentPosition(showLocation, errorHandler, options);
-      } else {
-         alert("Sorry, browser does not support geolocation!");
-      }
-    }
-    function errorHandler(err) {
-        if(err.code == 1) {
-           alert("Error: Access is denied!");
-        } else if( err.code == 2) {
-           alert("Error: Position is unavailable!");
-        }
-     }
-    function showLocation(position) {
-       latitude = position.coords.latitude;
-       longitude = position.coords.longitude;
-       document.getElementById("lat").innerHTML = latitude;
-       document.getElementById("lng").innerHTML = longitude;
-    }
 
 
 
 
     function requestMotionPermission(){
-        DeviceMotionEvent.requestPermission()
-        .then(response => {
-            if (response == 'granted') {
+        try{
 
-                window.addEventListener('devicemotion', (e) => {
-                    // do something with e
-                    motionEvent(e);
 
-                })
-            }
-        })
-        .catch(console.error)
+          DeviceMotionEvent.requestPermission()
+          .then(response => {
+              if (response == 'granted') {
+
+                  window.addEventListener('devicemotion', (e) => {
+                      // do something with e
+                      motionEvent(e);
+
+                  })
+              }
+          })
+          .catch(console.error)
+        } catch(err){
+          console.log("no motion permission")
+        }
     }
 
     function motionEvent(e){
@@ -110,19 +90,35 @@
 
     	app.activatePodo = 1;
 
-      getGPS();
+      gps=new GPS();
+      gps.init();
+      gps.onChange=function(latitude, longitude, accuracy, timestamp){
+        document.getElementById("lat").innerHTML = latitude;
+        document.getElementById("lng").innerHTML = longitude;
+      }
+      gps.onError=function(type, message, error){
+        console.log(type +" ERROR!" ,message, error);
+      }
+      //
       requestMotionPermission();
       //requestOrientationPermission();
       compass=new Compass();
-      compass.requestOrientationPermission();
-
+      compass.init();
+      compass.onError=function(type, message, error){
+        console.log(type +" ERROR!" ,message, error);
+      }
+      compass.onChange=function(heading, cardinalDirection, interCardinalDirection){
+        document.getElementById("heading").innerHTML = heading;
+        document.getElementById("cardinalDirection").innerHTML = cardinalDirection;
+        document.getElementById("interCardinalDirection").innerHTML = interCardinalDirection;
+      }
 
     }
   </script>
 </head>
 
 <body onload="init();">
-  <h2>Device Motion</h2>
+  <h2>Device Location</h2>
   <table>
     <tr>
       <td>Lat</td>
@@ -158,8 +154,12 @@
       <td id="heading">-</td>
     </tr>
     <tr>
-      <td>Heading Easy</td>
-      <td id="headingEasy">-</td>
+      <td>cardinalDirection</td>
+      <td id="cardinalDirection">-</td>
+    </tr>
+    <tr>
+      <td>interCardinalDirection</td>
+      <td id="interCardinalDirection">-</td>
     </tr>
 
    </table>
