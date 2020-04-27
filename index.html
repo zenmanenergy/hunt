@@ -79,7 +79,7 @@
     	app.podo_calory = localStorage.podo_calory || 0;
     	app.isGPSEnabled = localStorage.isGPSEnabled || false;
 
-      podo = new Pedometer();
+      podo = new PedometerORIG();
     	//init pedometer
     	podo.setCountStep(Math.round(app.podo_step));
     	podo.setWeight(Math.round(app.podo_weight));
