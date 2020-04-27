@@ -1,7 +1,7 @@
 <html>
 <head>
   <script type="text/javascript">
-
+    var latitude, longitude;
     function getGPS(){
       var options = {
         enableHighAccuracy: false,
@@ -9,14 +9,29 @@
         maximumAge: 0
       };
 
-      id = navigator.geolocation.getPosition(success, error, options);
-    }
+      if(navigator.geolocation) {
 
-    function success(pos) {
-      var crd = pos.coords;
-      console.log(pos);
-      document.getElementById("lat").innerHTML=crd.latitude;
-      document.getElementById("lng").innerHTML=crd.longitude;
+         // timeout at 60000 milliseconds (60 seconds)
+         var options = {timeout:60000};
+         navigator.geolocation.getCurrentPosition(showLocation, errorHandler, options);
+      } else {
+         alert("Sorry, browser does not support geolocation!");
+      }
+    }
+    function errorHandler(err) {
+        if(err.code == 1) {
+           alert("Error: Access is denied!");
+        } else if( err.code == 2) {
+           alert("Error: Position is unavailable!");
+        }
+     }
+    function showLocation(position) {
+       latitude = position.coords.latitude;
+       longitude = position.coords.longitude;
+       document.getElementById("lat").innerHTML = latitude;
+       document.getElementById("lng").innerHTML = longitude;
+
+       alert("Latitude : " + latitude + " Longitude: " + longitude);
     }
 
     function requestOrientationPermission(){
@@ -38,6 +53,8 @@
       document.getElementById("doTiltLR").innerHTML = Math.round(e.gamma);
       document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
       document.getElementById("doDirection").innerHTML = Math.round(e.alpha);
+      heading = Math.round(e.alpha) - latitude;
+
     }
 
 
@@ -65,7 +82,7 @@
       document.getElementById("accelZ").innerHTML = acceleration.z;
     }
     function init(){
-      alert('page init');
+      getGPS();
       requestMotionPermission();
       requestOrientationPermission();
     }
@@ -103,6 +120,10 @@
     <tr>
       <td>Direction [alpha]</td>
       <td id="doDirection">-</td>
+    </tr>
+    <tr>
+      <td>Direction</td>
+      <td id="heading">-</td>
     </tr>
 
    </table>
