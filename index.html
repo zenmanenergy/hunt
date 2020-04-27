@@ -52,7 +52,7 @@
       document.getElementById("doTiltLR").innerHTML = Math.round(e.gamma);
       document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
       document.getElementById("doDirection").innerHTML = Math.round(e.alpha);
-      if (heading > 0){
+      if (Math.round(e.alpha) > 0 && Math.round(e.alpha) <= 45){
         heading = 360 - (latitude-Math.round(e.alpha));
 
       } else{
