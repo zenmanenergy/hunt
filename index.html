@@ -28,6 +28,7 @@
         DeviceMotionEvent.requestPermission()
         .then(response => {
             if (response == 'granted') {
+
                 window.addEventListener('devicemotion', (e) => {
                     // do something with e
                     motionEvent(e);
@@ -40,13 +41,15 @@
 
     function motionEvent(e){
       acceleration = e.accelerationIncludingGravity;
-        document.getElementById("accelX").innerHTML = acceleration.x;
-          document.getElementById("accelY").innerHTML = acceleration.y;
-            document.getElementById("accelZ").innerHTML = acceleration.z;
+      document.getElementById("DeviceMotionMsg").innerHTML = "DeviceMotion";
+      document.getElementById("accelX").innerHTML = acceleration.x;
+      document.getElementById("accelY").innerHTML = acceleration.y;
+      document.getElementById("accelZ").innerHTML = acceleration.z;
     }
     function init(){
       alert('page init');
       requestMotionPermission();
+      requestOrientationPermission();
     }
   </script>
 </head>
@@ -57,19 +60,19 @@
   <table>
     <tr>
       <td>Event Supported</td>
-      <td id="DeviceOrientationMsg"></td>
+      <td id="DeviceOrientationMsg">-</td>
     </tr>
     <tr>
       <td>Tilt Left/Right [gamma]</td>
-      <td id="doTiltLR"></td>
+      <td id="doTiltLR">-</td>
     </tr>
     <tr>
       <td>Tilt Front/Back [beta]</td>
-      <td id="doTiltFB"></td>
+      <td id="doTiltFB">-</td>
     </tr>
     <tr>
       <td>Direction [alpha]</td>
-      <td id="doDirection"></td>
+      <td id="doDirection">-</td>
     </tr>
 
    </table>
@@ -77,28 +80,28 @@
   <table>
     <tr>
       <td>Event Supported</td>
-      <td id="DeviceMotionMsg"></td>
+      <td id="DeviceMotionMsg">-</td>
     </tr>
 
     <tr>
       <td>accelX</td>
-      <td id="accelX"></td>
+      <td id="accelX">-</td>
     </tr>
     <tr>
       <td>accelY</td>
-      <td id="accelY"></td>
+      <td id="accelY">-</td>
     </tr>
     <tr>
       <td>accelZ</td>
-      <td id="accelZ"></td>
+      <td id="accelZ">-</td>
     </tr>
     <tr>
       <td>rotationRate</td>
-      <td id="moRotation"></td>
+      <td id="moRotation">-</td>
     </tr>
     <tr>
       <td>interval</td>
-      <td id="moInterval"></td>
+      <td id="moInterval">-</td>
     </tr>
   </table>
 
