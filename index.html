@@ -110,11 +110,12 @@
       compass.onError=function(type, message, error){
         console.log(type +" ERROR!" ,message, error);
       }
-      // compass.onChange=function(heading, cardinalDirection, interCardinalDirection){
-      //   document.getElementById("heading").innerHTML = heading;
-      //   document.getElementById("cardinalDirection").innerHTML = cardinalDirection;
-      //   document.getElementById("interCardinalDirection").innerHTML = interCardinalDirection;
-      // }
+      compass.onChange=function(heading, cardinalDirection, interCardinalDirection){
+        alert(heading);
+        document.getElementById("heading").innerHTML = heading;
+        document.getElementById("cardinalDirection").innerHTML = cardinalDirection;
+        document.getElementById("interCardinalDirection").innerHTML = interCardinalDirection;
+      }
 
       pedometer=new Pedometer();
       pedometer.init();
