@@ -8,7 +8,6 @@ function Compass(){
   this.interCardinalDirection;
   this.heading;
   this.hasPermission=false;
-
   this.onChange=function(heading, cardinalDirection, interCardinalDirection){
     console.log("[Compass]","compass.onChange event. This method can be overriden using: compass.onChange=function(latitude, longitude, accuracy, timestamp){} ")
     console.log(heading, cardinalDirection, interCardinalDirection);
@@ -64,8 +63,7 @@ function Compass(){
                     parent.interCardinalDirection="NW";
                   }
 
-                  parent.onChange(parent.heading, parent.cardinalDirection, parent.interCardinalDirection,e);
-
+                  parent.onChange(parent.heading, parent.cardinalDirection, parent.interCardinalDirection);
 
               })
           }
