@@ -55,8 +55,6 @@ function Pedometer(){
     }
   };
 
-
-  this.filter = new Kalman();
   this.Kalman=function() {
   	this.G  = 1; // filter gain
   	this.Rw = 1; // noise power desirable
