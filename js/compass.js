@@ -3,7 +3,6 @@ function Compass(){
   //this parent variable is necessary to fix a flaw in Javascript that
   //doesn't allow callback functions to access the parent object.
   var parent = this;
-  console.log("compass constructor");
 
   this.cardinalDirection;
   this.interCardinalDirection;
@@ -18,12 +17,10 @@ function Compass(){
     console.log(type, message, error);
   };
   this.init = function (){
-  console.log("compass init");
     try{
       DeviceOrientationEvent.requestPermission()
       .then(response => {
           if (response == 'granted') {
-          console.log("compass granted");
             this.hasPermission=true;
               window.addEventListener('deviceorientation', (e) => {
                   // do something with e
@@ -72,7 +69,7 @@ function Compass(){
               })
           } else{
 
-            console.log("compass " + response);
+            // console.log("compass " + response);
           }
       })
       .catch(console.error)
