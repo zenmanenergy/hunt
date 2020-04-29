@@ -80,11 +80,13 @@ function Pedometer(){
                   document.getElementById("accelY").innerHTML = e.accelerationIncludingGravity.y;
                   document.getElementById("accelZ").innerHTML = e.accelerationIncludingGravity.z;
 
-                  // if ((podo.acc_norm.length < 2) || (podo.stepArr.length < 2)){
-                  //   podo.createTable(Math.round(2/(event.interval/1000)));
-                  // } else {
-                  //
-                  // }
+                  if ((podo.acc_norm.length < 2) || (podo.stepArr.length < 2)){
+                    parent.createTable(Math.round(2/(e.interval/1000)));
+                  } else {
+                    parent.acc_norm.push(parent.computeNorm(e.accelerationIncludingGravity.x, e.accelerationIncludingGravity.y, e.accelerationIncludingGravity.z));
+                    parent.acc_norm.shift();
+                    parent.onStep();
+                  }
               })
           }else{
 
@@ -102,7 +104,7 @@ function Pedometer(){
 
 
 
-  //private
+  //private s
   this.acc_norm = new Array(); // amplitude of the acceleration
 
 	this.var_acc   = 0.; // variance of the acceleration on the window L
@@ -111,7 +113,6 @@ function Pedometer(){
 	this.threshold = -1./0.; // threshold to detect a step
 	this.sensibility = 1./30.;  // sensibility to detect a step
 
-	this.countStep = 0;           // number of steps
 	this.stepArr   = new Array(); // steps in 2 seconds
 
   this.createTable = function(lWindow) {
@@ -120,5 +121,97 @@ function Pedometer(){
   };
 
   this.filter = new Kalman();
+  this.computeNorm = function(x,y,z) {
+		var norm = Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2));
+		var norm_filt = this.filter.onFilteringKalman(norm);
 
+		return norm_filt/9.80665;
+	};
+  this.onStep = function() {
+		this.varAcc(this.acc_norm);
+		this.min_acc = this.minAcc(this.acc_norm);
+		this.max_acc = this.maxAcc(this.acc_norm);
+
+		this.setThreshold(this.min_acc, this.max_acc);
+
+		var diff = this.max_acc - this.min_acc;
+
+		var isSensibility   = (Math.abs(diff) >= this.sensibility)// the acceleration has to go over the sensibility
+		var isOverThreshold = ((this.acc_norm[this.acc_norm.length-1] >= this.threshold) && (this.acc_norm[this.acc_norm.length-2] < this.threshold));// if the acceleration goes over the threshold and the previous was below this threshold
+		var isValidStep     = (this.stepArr[this.stepArr.length-1] == 0);
+
+		if (isSensibility && isOverThreshold && isValidStep) {
+			this.steps++;
+      this.onChange(this.steps,"incomplete");
+			this.stepArr.push(1);
+			this.stepArr.shift();
+
+			// // Distance
+			// if (Boolean(this.isGPSEnabled) && Boolean(this.isGPSReceived)) {
+			// 	this.setDistanceGPS();
+			// 	var nStepGPS = Math.round(this.distance/this.steps);
+			// 	if (this.steps < nStepGPS) {
+			// 		this.steps = nStepGPS;
+			// 	};
+			// } else {
+			// 	this.setDistance();
+			// };
+		} else {
+			this.stepArr.push(0);
+			this.stepArr.shift();
+		};
+	};
+
+  // seek variance
+	this.varAcc = function(acc) {
+		var moy  = 0.;//mean
+		var moy2 = 0.;//square mean
+		for (var k = 0; k < acc.length-1; k++) {
+			moy += acc[k];
+			moy2 += Math.pow(acc[k],2);
+		};
+		this.var_acc = (Math.pow(moy,2) - moy2)/acc.length;
+		if (this.var_acc - 0.5 > 0.) {
+				this.var_acc -= 0.5;
+		};
+		if (isNaN(this.var_acc) == 0) {
+			this.filtre.setRv(this.var_acc);
+			this.setSensibility(2.*Math.sqrt(this.var_acc)/Math.pow(9.80665,2));
+		}
+		else {
+			this.setSensibility(1./30.);
+		};
+	};
+
+	// seek minimum
+	this.minAcc = function(acc) {
+		var mini = 1./0.;
+		for (var k = 0; k < acc.length; k++) {
+			if (acc[k] < mini)
+			{
+				mini = acc[k];
+			};
+		};
+		return mini;
+	};
+
+	// seek maximum
+	this.maxAcc = function(acc) {
+		var maxi = -1./0.;
+		for (var k = 0; k < acc.length; k++) {
+			if (acc[k] > maxi)
+			{
+				maxi = acc[k];
+			};
+		};
+		return maxi;
+	};
+
+	// compute the threshold
+	this.setThreshold = function(min, max) {
+		this.threshold = (min+max)/2;
+	};
+  this.setSensibility = function(sensibility) {
+		this.sensibility = sensibility;
+	};
 };
