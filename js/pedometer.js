@@ -1,4 +1,45 @@
 
+function Kalman () {
+  this.G  = 1; // filter gain
+  this.Rw = 1; // noise power desirable
+  this.Rv = 10; // noise power estimated
+
+  this.A = 1;
+  this.C = 1;
+  this.B = 0;
+  this.u = 0;
+  this.P = NaN;
+  this.x = NaN; // estimated signal without noise
+  this.y = NaN; //measured
+
+
+  this.onFilteringKalman = function(ech)//signal: signal measured
+  {
+    this.y = ech;
+
+    if (isNaN(this.x)) {
+      this.x = 1/this.C * this.y;
+      this.P = 1/this.C * this.Rv * 1/this.C;
+    }
+    else {
+      // Kalman Filter: Prediction and covariance P
+      this.x = this.A*this.x + this.B*this.u;
+      this.P = this.A * this.P * this.A + this.Rw;
+      // Gain
+      this.G = this.P*this.C*1/(this.C*this.P*this.C+this.Rv);
+      // Correction
+      this.x = this.x + this.G*(this.y-this.C*this.x);
+      this.P = this.P - this.G*this.C*this.P;
+    };
+    return this.x;
+  };
+
+  this.setRv = function(Rv)//signal: signal measured
+  {
+    this.Rv = Rv;
+  };
+};
+
 function Pedometer(){
   //this parent variable is necessary to fix a flaw in Javascript that
   //doesn't allow callback functions to access the parent object.
@@ -80,45 +121,4 @@ function Pedometer(){
 
   this.filter = new Kalman();
 
-};
-
-var Kalman=function() {
-  this.G  = 1; // filter gain
-  this.Rw = 1; // noise power desirable
-  this.Rv = 10; // noise power estimated
-
-  this.A = 1;
-  this.C = 1;
-  this.B = 0;
-  this.u = 0;
-  this.P = NaN;
-  this.x = NaN; // estimated signal without noise
-  this.y = NaN; //measured
-
-
-  this.onFilteringKalman = function(ech)//signal: signal measured
-  {
-    this.y = ech;
-
-    if (isNaN(this.x)) {
-      this.x = 1/this.C * this.y;
-      this.P = 1/this.C * this.Rv * 1/this.C;
-    }
-    else {
-      // Kalman Filter: Prediction and covariance P
-      this.x = this.A*this.x + this.B*this.u;
-      this.P = this.A * this.P * this.A + this.Rw;
-      // Gain
-      this.G = this.P*this.C*1/(this.C*this.P*this.C+this.Rv);
-      // Correction
-      this.x = this.x + this.G*(this.y-this.C*this.x);
-      this.P = this.P - this.G*this.C*this.P;
-    };
-    return this.x;
-  };
-
-  this.setRv = function(Rv)//signal: signal measured
-  {
-    this.Rv = Rv;
-  };
 };
