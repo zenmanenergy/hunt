@@ -73,23 +73,23 @@
       };
     }
     function init(){
-      app.podo_stepSize = localStorage.podo_stepSize || 50;
-      app.podo_weight = localStorage.podo_weight || 70;
-    	app.podo_step = localStorage.podo_step || 0;
-    	app.podo_speed = localStorage.podo_speed || 0;
-    	app.podo_calory = localStorage.podo_calory || 0;
-    	app.isGPSEnabled = localStorage.isGPSEnabled || false;
-
-      podo = new PedometerORIG();
-    	//init pedometer
-    	podo.setCountStep(Math.round(app.podo_step));
-    	podo.setWeight(Math.round(app.podo_weight));
-    	podo.setStepSize(Math.round(app.podo_stepSize));
-    	podo.setMeanSpeed(Math.round(app.podo_speed*1000.)/1000.);
-    	podo.setCalory(Math.round(app.podo_calory*1000.)/1000.);
-    	podo.setIsGPSEnabled(Boolean(app.isGPSEnabled));
-
-    	app.activatePodo = 1;
+      // app.podo_stepSize = localStorage.podo_stepSize || 50;
+      // app.podo_weight = localStorage.podo_weight || 70;
+    	// app.podo_step = localStorage.podo_step || 0;
+    	// app.podo_speed = localStorage.podo_speed || 0;
+    	// app.podo_calory = localStorage.podo_calory || 0;
+    	// app.isGPSEnabled = localStorage.isGPSEnabled || false;
+      //
+      // podo = new PedometerORIG();
+    	// //init pedometer
+    	// podo.setCountStep(Math.round(app.podo_step));
+    	// podo.setWeight(Math.round(app.podo_weight));
+    	// podo.setStepSize(Math.round(app.podo_stepSize));
+    	// podo.setMeanSpeed(Math.round(app.podo_speed*1000.)/1000.);
+    	// podo.setCalory(Math.round(app.podo_calory*1000.)/1000.);
+    	// podo.setIsGPSEnabled(Boolean(app.isGPSEnabled));
+      //
+    	// app.activatePodo = 1;
 
       gps=new GPS();
       gps.init();
@@ -101,7 +101,7 @@
         console.log(type +" ERROR!" ,message, error);
       }
 
-      requestMotionPermission();
+      // requestMotionPermission();
 
       compass=new Compass();
       compass.init();
@@ -119,6 +119,7 @@
 </head>
 
 <body onload="init();">
+  v1.01
   <h2>Device Location</h2>
   <table>
     <tr>
