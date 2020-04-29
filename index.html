@@ -4,7 +4,8 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Expires" CONTENT="-1">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
@@ -26,60 +27,60 @@
 
 
 
-
-
-      function requestMotionPermission(){
-          try{
-
-
-            DeviceMotionEvent.requestPermission()
-            .then(response => {
-                if (response == 'granted') {
-
-                    window.addEventListener('devicemotion', (e) => {
-                        // do something with e
-                        motionEvent(e);
-
-                    })
-                }
-            })
-            .catch(console.error)
-          } catch(err){
-            console.log("no motion permission")
-          }
-      }
-
-      function motionEvent(e){
-        acceleration = e.accelerationIncludingGravity;
-        document.getElementById("DeviceMotionMsg").innerHTML = "DeviceMotion";
-        document.getElementById("accelX").innerHTML = acceleration.x;
-        document.getElementById("accelY").innerHTML = acceleration.y;
-        document.getElementById("accelZ").innerHTML = acceleration.z;
-
-        if (app.activatePodo){
-          if ((podo.acc_norm.length < 2) || (podo.stepArr.length < 2))
-          {
-            podo.createTable(Math.round(2/(event.interval/1000)));
-          } else {
-            norm = podo.computeNorm(e.accelerationIncludingGravity.x, e.accelerationIncludingGravity.y, e.accelerationIncludingGravity.z);
-            podo.acc_norm.push(norm);
-
-            podo.update();
-
-            podo.onStep(podo.acc_norm);
-
-
-            document.getElementById("acc_norm").innerHTML= podo.acc_norm;
-
-            if (isNaN(podo.distance) == 0){
-              document.getElementById("distance").innerHTML= Math.round(podo.distance/100) + "meters";
-            } else {
-              document.getElementById("distance").innerHTML=0;
-            };
-
-          };
-        };
-      }
+      //
+      //
+      // function requestMotionPermission(){
+      //     try{
+      //
+      //
+      //       DeviceMotionEvent.requestPermission()
+      //       .then(response => {
+      //           if (response == 'granted') {
+      //
+      //               window.addEventListener('devicemotion', (e) => {
+      //                   // do something with e
+      //                   motionEvent(e);
+      //
+      //               })
+      //           }
+      //       })
+      //       .catch(console.error)
+      //     } catch(err){
+      //       console.log("no motion permission")
+      //     }
+      // }
+      //
+      // function motionEvent(e){
+      //   acceleration = e.accelerationIncludingGravity;
+      //   document.getElementById("DeviceMotionMsg").innerHTML = "DeviceMotion";
+      //   document.getElementById("accelX").innerHTML = acceleration.x;
+      //   document.getElementById("accelY").innerHTML = acceleration.y;
+      //   document.getElementById("accelZ").innerHTML = acceleration.z;
+      //
+      //   if (app.activatePodo){
+      //     if ((podo.acc_norm.length < 2) || (podo.stepArr.length < 2))
+      //     {
+      //       podo.createTable(Math.round(2/(event.interval/1000)));
+      //     } else {
+      //       norm = podo.computeNorm(e.accelerationIncludingGravity.x, e.accelerationIncludingGravity.y, e.accelerationIncludingGravity.z);
+      //       podo.acc_norm.push(norm);
+      //
+      //       podo.update();
+      //
+      //       podo.onStep(podo.acc_norm);
+      //
+      //
+      //       document.getElementById("acc_norm").innerHTML= podo.acc_norm;
+      //
+      //       if (isNaN(podo.distance) == 0){
+      //         document.getElementById("distance").innerHTML= Math.round(podo.distance/100) + "meters";
+      //       } else {
+      //         document.getElementById("distance").innerHTML=0;
+      //       };
+      //
+      //     };
+      //   };
+      // }
       function init(){
         // app.podo_stepSize = localStorage.podo_stepSize || 50;
         // app.podo_weight = localStorage.podo_weight || 70;
@@ -138,7 +139,7 @@
   </head>
 
   <body >
-    v1.13
+    v1.14
     <button onclick="init();" type="button" class="btn btn-primary">Start</button>
     <h2>Device Location</h2>
     <table>
