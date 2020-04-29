@@ -1,210 +1,234 @@
-<html>
-<head>
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <script src="js/gps.js" type="text/javascript" charset="utf-8" defer></script>
-  <script src="js/compass.js" type="text/javascript" charset="utf-8" defer></script>
-  <script src="js/podo.js" type="text/javascript" charset="utf-8" defer></script>
-  <script type="text/javascript">
-    var latitude, longitude;
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    console.log("hello world");
-    var app={};
-    var podo;
-    var compass;
-    var gps;
+    <title>Hello, world!</title>
 
 
+    <script src="js/podo.js" type="text/javascript" charset="utf-8" defer></script>
+    <script src="js/gps.js" type="text/javascript" charset="utf-8" defer></script>
+    <script src="js/compass.js" type="text/javascript" charset="utf-8" defer></script>
+    <script type="text/javascript">
+      var latitude, longitude;
+
+      console.log("hello world");
+      var app={};
+      var podo;
+      var compass;
+      var gps;
 
 
 
 
 
-    function requestMotionPermission(){
-        try{
 
 
-          DeviceMotionEvent.requestPermission()
-          .then(response => {
-              if (response == 'granted') {
-
-                  window.addEventListener('devicemotion', (e) => {
-                      // do something with e
-                      motionEvent(e);
-
-                  })
-              }
-          })
-          .catch(console.error)
-        } catch(err){
-          console.log("no motion permission")
-        }
-    }
-
-    function motionEvent(e){
-      acceleration = e.accelerationIncludingGravity;
-      document.getElementById("DeviceMotionMsg").innerHTML = "DeviceMotion";
-      document.getElementById("accelX").innerHTML = acceleration.x;
-      document.getElementById("accelY").innerHTML = acceleration.y;
-      document.getElementById("accelZ").innerHTML = acceleration.z;
-
-      if (app.activatePodo){
-        if ((podo.acc_norm.length < 2) || (podo.stepArr.length < 2))
-        {
-          podo.createTable(Math.round(2/(event.interval/1000)));
-        } else {
-          norm = podo.computeNorm(e.accelerationIncludingGravity.x, e.accelerationIncludingGravity.y, e.accelerationIncludingGravity.z);
-          podo.acc_norm.push(norm);
-
-          podo.update();
-
-          podo.onStep(podo.acc_norm);
+      function requestMotionPermission(){
+          try{
 
 
-          document.getElementById("acc_norm").innerHTML= podo.acc_norm;
+            DeviceMotionEvent.requestPermission()
+            .then(response => {
+                if (response == 'granted') {
 
-          if (isNaN(podo.distance) == 0){
-            document.getElementById("distance").innerHTML= Math.round(podo.distance/100) + "meters";
+                    window.addEventListener('devicemotion', (e) => {
+                        // do something with e
+                        motionEvent(e);
+
+                    })
+                }
+            })
+            .catch(console.error)
+          } catch(err){
+            console.log("no motion permission")
+          }
+      }
+
+      function motionEvent(e){
+        acceleration = e.accelerationIncludingGravity;
+        document.getElementById("DeviceMotionMsg").innerHTML = "DeviceMotion";
+        document.getElementById("accelX").innerHTML = acceleration.x;
+        document.getElementById("accelY").innerHTML = acceleration.y;
+        document.getElementById("accelZ").innerHTML = acceleration.z;
+
+        if (app.activatePodo){
+          if ((podo.acc_norm.length < 2) || (podo.stepArr.length < 2))
+          {
+            podo.createTable(Math.round(2/(event.interval/1000)));
           } else {
-            document.getElementById("distance").innerHTML=0;
+            norm = podo.computeNorm(e.accelerationIncludingGravity.x, e.accelerationIncludingGravity.y, e.accelerationIncludingGravity.z);
+            podo.acc_norm.push(norm);
+
+            podo.update();
+
+            podo.onStep(podo.acc_norm);
+
+
+            document.getElementById("acc_norm").innerHTML= podo.acc_norm;
+
+            if (isNaN(podo.distance) == 0){
+              document.getElementById("distance").innerHTML= Math.round(podo.distance/100) + "meters";
+            } else {
+              document.getElementById("distance").innerHTML=0;
+            };
+
           };
-
         };
-      };
-    }
-    function init(){
-      // app.podo_stepSize = localStorage.podo_stepSize || 50;
-      // app.podo_weight = localStorage.podo_weight || 70;
-    	// app.podo_step = localStorage.podo_step || 0;
-    	// app.podo_speed = localStorage.podo_speed || 0;
-    	// app.podo_calory = localStorage.podo_calory || 0;
-    	// app.isGPSEnabled = localStorage.isGPSEnabled || false;
-      //
-      // podo = new PedometerORIG();
-    	// //init pedometer
-    	// podo.setCountStep(Math.round(app.podo_step));
-    	// podo.setWeight(Math.round(app.podo_weight));
-    	// podo.setStepSize(Math.round(app.podo_stepSize));
-    	// podo.setMeanSpeed(Math.round(app.podo_speed*1000.)/1000.);
-    	// podo.setCalory(Math.round(app.podo_calory*1000.)/1000.);
-    	// podo.setIsGPSEnabled(Boolean(app.isGPSEnabled));
-      //
-    	// app.activatePodo = 1;
-
-      gps=new GPS();
-      gps.init();
-      gps.onChange=function(latitude, longitude, accuracy, timestamp){
-        document.getElementById("lat").innerHTML = latitude;
-        document.getElementById("lng").innerHTML = longitude;
       }
-      gps.onError=function(type, message, error){
-        console.log(type +" ERROR!" ,message, error);
+      function init(){
+        // app.podo_stepSize = localStorage.podo_stepSize || 50;
+        // app.podo_weight = localStorage.podo_weight || 70;
+      	// app.podo_step = localStorage.podo_step || 0;
+      	// app.podo_speed = localStorage.podo_speed || 0;
+      	// app.podo_calory = localStorage.podo_calory || 0;
+      	// app.isGPSEnabled = localStorage.isGPSEnabled || false;
+        //
+        // podo = new PedometerORIG();
+      	// //init pedometer
+      	// podo.setCountStep(Math.round(app.podo_step));
+      	// podo.setWeight(Math.round(app.podo_weight));
+      	// podo.setStepSize(Math.round(app.podo_stepSize));
+      	// podo.setMeanSpeed(Math.round(app.podo_speed*1000.)/1000.);
+      	// podo.setCalory(Math.round(app.podo_calory*1000.)/1000.);
+      	// podo.setIsGPSEnabled(Boolean(app.isGPSEnabled));
+        //
+      	// app.activatePodo = 1;
+
+        gps=new GPS();
+        gps.init();
+        gps.onChange=function(latitude, longitude, accuracy, timestamp){
+          document.getElementById("lat").innerHTML = latitude;
+          document.getElementById("lng").innerHTML = longitude;
+        }
+        gps.onError=function(type, message, error){
+          console.log(type +" ERROR!" ,message, error);
+        }
+
+        // requestMotionPermission();
+
+        compass=new Compass();
+        compass.init();
+        compass.onError=function(type, message, error){
+          console.log(type +" ERROR!" ,message, error);
+        }
+        compass.onChange=function(heading, cardinalDirection, interCardinalDirection){
+          document.getElementById("heading").innerHTML = heading;
+          document.getElementById("cardinalDirection").innerHTML = cardinalDirection;
+          document.getElementById("interCardinalDirection").innerHTML = interCardinalDirection;
+        }
+
       }
+    </script>
 
-      // requestMotionPermission();
+  </head>
 
-      compass=new Compass();
-      compass.init();
-      compass.onError=function(type, message, error){
-        console.log(type +" ERROR!" ,message, error);
-      }
-      compass.onChange=function(heading, cardinalDirection, interCardinalDirection){
-        document.getElementById("heading").innerHTML = heading;
-        document.getElementById("cardinalDirection").innerHTML = cardinalDirection;
-        document.getElementById("interCardinalDirection").innerHTML = interCardinalDirection;
-      }
+  <body onload="init();">
+    v1.01
+    <h2>Device Location</h2>
+    <table>
+      <tr>
+        <td>Lat</td>
+        <td id="lat">-</td>
+      </tr>
 
-    }
-  </script>
-</head>
+      <tr>
+        <td>lng</td>
+        <td id="lng">-</td>
+      </tr>
 
-<body onload="init();">
-  v1.01
-  <h2>Device Location</h2>
-  <table>
-    <tr>
-      <td>Lat</td>
-      <td id="lat">-</td>
-    </tr>
+    </table>
+    <h2>Device Orientation</h2>
+    <table>
+      <tr>
+        <td>Event Supported</td>
+        <td id="DeviceOrientationMsg">-</td>
+      </tr>
+      <tr>
+        <td>Tilt Left/Right [gamma]</td>
+        <td id="doTiltLR">-</td>
+      </tr>
+      <tr>
+        <td>Tilt Front/Back [beta]</td>
+        <td id="doTiltFB">-</td>
+      </tr>
+      <tr>
+        <td>Direction [alpha]</td>
+        <td id="doDirection">-</td>
+      </tr>
+      <tr>
+        <td>Heading</td>
+        <td id="heading">-</td>
+      </tr>
+      <tr>
+        <td>cardinalDirection</td>
+        <td id="cardinalDirection">-</td>
+      </tr>
+      <tr>
+        <td>interCardinalDirection</td>
+        <td id="interCardinalDirection">-</td>
+      </tr>
 
-    <tr>
-      <td>lng</td>
-      <td id="lng">-</td>
-    </tr>
+     </table>
+    <h2>Device Motion</h2>
+    <table>
+      <tr>
+        <td>Event Supported</td>
+        <td id="DeviceMotionMsg">-</td>
+      </tr>
 
-  </table>
-  <h2>Device Orientation</h2>
-  <table>
-    <tr>
-      <td>Event Supported</td>
-      <td id="DeviceOrientationMsg">-</td>
-    </tr>
-    <tr>
-      <td>Tilt Left/Right [gamma]</td>
-      <td id="doTiltLR">-</td>
-    </tr>
-    <tr>
-      <td>Tilt Front/Back [beta]</td>
-      <td id="doTiltFB">-</td>
-    </tr>
-    <tr>
-      <td>Direction [alpha]</td>
-      <td id="doDirection">-</td>
-    </tr>
-    <tr>
-      <td>Heading</td>
-      <td id="heading">-</td>
-    </tr>
-    <tr>
-      <td>cardinalDirection</td>
-      <td id="cardinalDirection">-</td>
-    </tr>
-    <tr>
-      <td>interCardinalDirection</td>
-      <td id="interCardinalDirection">-</td>
-    </tr>
+      <tr>
+        <td>accelX</td>
+        <td id="accelX">-</td>
+      </tr>
+      <tr>
+        <td>accelY</td>
+        <td id="accelY">-</td>
+      </tr>
+      <tr>
+        <td>accelZ</td>
+        <td id="accelZ">-</td>
+      </tr>
+      <tr>
+        <td>rotationRate</td>
+        <td id="moRotation">-</td>
+      </tr>
+      <tr>
+        <td>interval</td>
+        <td id="moInterval">-</td>
+      </tr>
+      <tr>
+        <td>acc_norm</td>
+        <td id="acc_norm">-</td>
+      </tr>
+      <tr>
+        <td>steps</td>
+        <td id="steps">-</td>
+      </tr>
+      <tr>
+        <td>distance</td>
+        <td id="distance">-</td>
+      </tr>
 
-   </table>
-  <h2>Device Motion</h2>
-  <table>
-    <tr>
-      <td>Event Supported</td>
-      <td id="DeviceMotionMsg">-</td>
-    </tr>
+    </table>
 
-    <tr>
-      <td>accelX</td>
-      <td id="accelX">-</td>
-    </tr>
-    <tr>
-      <td>accelY</td>
-      <td id="accelY">-</td>
-    </tr>
-    <tr>
-      <td>accelZ</td>
-      <td id="accelZ">-</td>
-    </tr>
-    <tr>
-      <td>rotationRate</td>
-      <td id="moRotation">-</td>
-    </tr>
-    <tr>
-      <td>interval</td>
-      <td id="moInterval">-</td>
-    </tr>
-    <tr>
-      <td>acc_norm</td>
-      <td id="acc_norm">-</td>
-    </tr>
-    <tr>
-      <td>steps</td>
-      <td id="steps">-</td>
-    </tr>
-    <tr>
-      <td>distance</td>
-      <td id="distance">-</td>
-    </tr>
+  </body>
 
-  </table>
 
-</body>
+
+
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
 </html>
