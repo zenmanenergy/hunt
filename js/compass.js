@@ -28,6 +28,7 @@ function Compass(){
               window.addEventListener('deviceorientation', (e) => {
                   // do something with e
                   //orientationEvent(e);
+                  parent.orientation=e;
                   document.getElementById("DeviceOrientationMsg").innerHTML = "DeviceOrientation";
                   document.getElementById("doTiltLR").innerHTML = Math.round(e.gamma);
                   document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
