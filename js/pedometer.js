@@ -24,6 +24,25 @@ function Pedometer(){
   };
   this.init = function (){
     console.log("init");
+    try{
 
+
+      DeviceMotionEvent.requestPermission()
+      .then(response => {
+          if (response == 'granted') {
+
+              window.addEventListener('devicemotion', (e) => {
+                
+                  document.getElementById("accelX").innerHTML = e.accelerationIncludingGravity.x;
+                  document.getElementById("accelY").innerHTML = e.accelerationIncludingGravity.y;
+                  document.getElementById("accelZ").innerHTML = e.accelerationIncludingGravity.z;
+
+              })
+          }
+      })
+      .catch(console.error)
+    } catch(err){
+      console.log("no motion permission")
+    }
   };
 };
