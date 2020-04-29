@@ -139,7 +139,7 @@
   </head>
 
   <body >
-    v1.14
+    v1.15
     <button onclick="init();" type="button" class="btn btn-primary">Start</button>
     <h2>Device Location</h2>
     <table>
@@ -188,6 +188,8 @@
      </table>
     <h2>Device Motion</h2>
     <table>
+
+      <!---
       <tr>
         <td>Event Supported</td>
         <td id="DeviceMotionMsg">-</td>
@@ -217,6 +219,7 @@
         <td>acc_norm</td>
         <td id="acc_norm">-</td>
       </tr>
+      --->
       <tr>
         <td>steps</td>
         <td id="steps">-</td>
@@ -225,6 +228,9 @@
         <td>distance</td>
         <td id="distance">-</td>
       </tr>
+      <tr>
+        <td>Reset</td>
+        <td><button onclick="pedometer.reset();" type="button" class="btn btn-primary">Reset</button>
 
     </table>
 

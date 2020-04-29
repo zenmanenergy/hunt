@@ -1,4 +1,8 @@
 
+
+
+
+
 function Kalman () {
   this.G  = 1; // filter gain
   this.Rw = 1; // noise power desirable
@@ -44,7 +48,6 @@ function Pedometer(){
   //this parent variable is necessary to fix a flaw in Javascript that
   //doesn't allow callback functions to access the parent object.
   var parent = this;
-  console.log("pedometer constructor");
 
 
   this.hasPermission=false;
@@ -55,6 +58,7 @@ function Pedometer(){
   this.reset=function(){
     this.steps=0;
     this.distance=0;
+    this.onChange(this.steps,this.distance);
   };
   this.onChange=function(steps,distance){
     console.log("[Pedometer]","pedometer.onChange event. This method can be overriden using: pedometer.onChange=function(steps,distance){} ")
@@ -65,27 +69,22 @@ function Pedometer(){
     console.log(type, message, error);
   };
   this.init = function (){
-    console.log("pedometer init");
     try{
 
 
       DeviceMotionEvent.requestPermission()
       .then(response => {
           if (response == 'granted') {
-            console.log("pedometer granted");
 
               window.addEventListener('devicemotion', (e) => {
 
-                  document.getElementById("accelX").innerHTML = e.accelerationIncludingGravity.x;
-                  document.getElementById("accelY").innerHTML = e.accelerationIncludingGravity.y;
-                  document.getElementById("accelZ").innerHTML = e.accelerationIncludingGravity.z;
+                  // document.getElementById("accelX").innerHTML = e.accelerationIncludingGravity.x;
+                  // document.getElementById("accelY").innerHTML = e.accelerationIncludingGravity.y;
+                  // document.getElementById("accelZ").innerHTML = e.accelerationIncludingGravity.z;
 
-                  console.log("refresh!!!")
                   if ((parent.acc_norm.length < 2) || (parent.stepArr.length < 2)){
-                    console.log("create table");
                     parent.createTable(Math.round(2/(e.interval/1000)));
                   } else {
-                    console.log("compute!");
                     parent.acc_norm.push(parent.computeNorm(e.accelerationIncludingGravity.x, e.accelerationIncludingGravity.y, e.accelerationIncludingGravity.z));
                     parent.acc_norm.shift();
                     parent.onStep();
@@ -118,6 +117,17 @@ function Pedometer(){
 
 	this.stepArr   = new Array(); // steps in 2 seconds
 
+  this.weight    = 70; // weight of the pedestrian
+	this.stepSize  = 50; // step size of the pedestrian (cm)
+	this.distance  = 0;  // total distance (cm)
+	this.calory    = 0;  // calory burned (C)
+	this.speed     = 0;  // instantaneous speed of the pedestrian (m/s)
+	this.meanSpeed = 0;  // mean speed of the pedestrian (m/s)
+
+  this.isGPSEnabled  = false; //enable GPS measurement
+
+
+
   this.createTable = function(lWindow) {
     this.acc_norm = new Array(lWindow);
     this.stepArr = new Array(lWindow);
@@ -125,14 +135,12 @@ function Pedometer(){
 
   this.filter = new Kalman();
   this.computeNorm = function(x,y,z) {
-    console.log('go computeNorm');
 		var norm = Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2));
 		var norm_filt = this.filter.onFilteringKalman(norm);
 
 		return norm_filt/9.80665;
 	};
   this.onStep = function() {
-    console.log("onstep")
 		this.varAcc(this.acc_norm);
 		this.min_acc = this.minAcc(this.acc_norm);
 		this.max_acc = this.maxAcc(this.acc_norm);
@@ -147,21 +155,20 @@ function Pedometer(){
 
 		if (isSensibility && isOverThreshold && isValidStep) {
 			this.steps++;
-        console.log(this.step);
-      this.onChange(this.steps,"incomplete");
+      this.onChange(this.steps,this.distance);
 			this.stepArr.push(1);
 			this.stepArr.shift();
 
-			// // Distance
-			// if (Boolean(this.isGPSEnabled) && Boolean(this.isGPSReceived)) {
-			// 	this.setDistanceGPS();
-			// 	var nStepGPS = Math.round(this.distance/this.steps);
-			// 	if (this.steps < nStepGPS) {
-			// 		this.steps = nStepGPS;
-			// 	};
-			// } else {
-			// 	this.setDistance();
-			// };
+			// Distance
+			if (Boolean(this.isGPSEnabled) && Boolean(this.isGPSReceived)) {
+				this.setDistanceGPS();
+				var nStepGPS = Math.round(this.distance/this.steps);
+				if (this.steps < nStepGPS) {
+					this.steps = nStepGPS;
+				};
+			} else {
+				this.setDistance();
+			};
 		} else {
 			this.stepArr.push(0);
 			this.stepArr.shift();
@@ -212,6 +219,10 @@ function Pedometer(){
 		};
 		return maxi;
 	};
+  // Compute total distance
+  this.setDistance = function() {
+    this.distance = this.steps * this.stepSize;//cm
+  };
 
 	// compute the threshold
 	this.setThreshold = function(min, max) {
