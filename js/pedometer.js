@@ -81,8 +81,10 @@ function Pedometer(){
                   document.getElementById("accelZ").innerHTML = e.accelerationIncludingGravity.z;
 
                   if ((podo.acc_norm.length < 2) || (podo.stepArr.length < 2)){
+                    console.log("create table");
                     parent.createTable(Math.round(2/(e.interval/1000)));
                   } else {
+                    console.log("compute!");
                     parent.acc_norm.push(parent.computeNorm(e.accelerationIncludingGravity.x, e.accelerationIncludingGravity.y, e.accelerationIncludingGravity.z));
                     parent.acc_norm.shift();
                     parent.onStep();
@@ -122,12 +124,14 @@ function Pedometer(){
 
   this.filter = new Kalman();
   this.computeNorm = function(x,y,z) {
+    console.log('go computeNorm');
 		var norm = Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2));
 		var norm_filt = this.filter.onFilteringKalman(norm);
 
 		return norm_filt/9.80665;
 	};
   this.onStep = function() {
+    console.log("onstep")
 		this.varAcc(this.acc_norm);
 		this.min_acc = this.minAcc(this.acc_norm);
 		this.max_acc = this.maxAcc(this.acc_norm);
@@ -142,6 +146,7 @@ function Pedometer(){
 
 		if (isSensibility && isOverThreshold && isValidStep) {
 			this.steps++;
+        console.log(this.step);
       this.onChange(this.steps,"incomplete");
 			this.stepArr.push(1);
 			this.stepArr.shift();
