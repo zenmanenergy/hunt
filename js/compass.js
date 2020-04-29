@@ -28,13 +28,13 @@ function Compass(){
               window.addEventListener('deviceorientation', (e) => {
                   // do something with e
                   //orientationEvent(e);
-                  parent.orientation=e;
-                  document.getElementById("DeviceOrientationMsg").innerHTML = "DeviceOrientation";
-                  document.getElementById("doTiltLR").innerHTML = Math.round(e.gamma);
-                  document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
-                  document.getElementById("doDirection").innerHTML = 360-Math.round(e.alpha);
+                  //parent.orientation=e;
+                  // document.getElementById("DeviceOrientationMsg").innerHTML = "DeviceOrientation";
+                  // document.getElementById("doTiltLR").innerHTML = Math.round(e.gamma);
+                  // document.getElementById("doTiltFB").innerHTML = Math.round(e.beta);
+                  // document.getElementById("doDirection").innerHTML = 360-Math.round(e.alpha);
                   //parent.heading = 360-Math.round(e.alpha);
-                  parent.heading = e.webkitCompassHeading;
+                  parent.heading = Math.round(e.webkitCompassHeading);
                   if ((parent.heading >= 315 && parent.heading < 360) || (parent.heading >= 0 && parent.heading < 45)){
                     parent.cardinalDirection="N";
 

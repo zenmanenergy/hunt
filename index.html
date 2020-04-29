@@ -11,9 +11,9 @@
     <title>Hello, world!</title>
 
 
-    <script src="js/podo.js" type="text/javascript" charset="utf-8" defer></script>
     <script src="js/gps.js" type="text/javascript" charset="utf-8" defer></script>
     <script src="js/compass.js" type="text/javascript" charset="utf-8" defer></script>
+    <script src="js/pedometer.js" type="text/javascript" charset="utf-8" defer></script>
     <script type="text/javascript">
       var latitude, longitude;
 
@@ -123,13 +123,23 @@
           document.getElementById("interCardinalDirection").innerHTML = interCardinalDirection;
         }
 
+        pedometer=new Pedometer();
+        pedometer.init();
+        pedometer.onError=function(type, message, error){
+          console.log(type +" ERROR!" ,message, error);
+        }
+        pedometer.onChange=function(steps, distance){
+          document.getElementById("steps").innerHTML = steps;
+          document.getElementById("distance").innerHTML = distance;
+        }
+
       }
     </script>
 
   </head>
 
   <body >
-    v1.04
+    v1.06
     <button onclick="init();" type="button" class="btn btn-primary">Start</button>
     <h2>Device Location</h2>
     <table>
@@ -146,7 +156,7 @@
     </table>
     <h2>Device Orientation</h2>
     <table>
-      <tr>
+      <!---<tr>
         <td>Event Supported</td>
         <td id="DeviceOrientationMsg">-</td>
       </tr>
@@ -161,7 +171,7 @@
       <tr>
         <td>Direction [alpha]</td>
         <td id="doDirection">-</td>
-      </tr>
+      </tr> --->
       <tr>
         <td>Heading</td>
         <td id="heading">-</td>
