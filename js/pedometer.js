@@ -80,6 +80,7 @@ function Pedometer(){
                   document.getElementById("accelY").innerHTML = e.accelerationIncludingGravity.y;
                   document.getElementById("accelZ").innerHTML = e.accelerationIncludingGravity.z;
 
+                  console.log("refresh!!!")
                   if ((parent.acc_norm.length < 2) || (parent.stepArr.length < 2)){
                     console.log("create table");
                     parent.createTable(Math.round(2/(e.interval/1000)));
