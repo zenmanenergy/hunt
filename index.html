@@ -7,7 +7,8 @@
     <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
     <META HTTP-EQUIV="Expires" CONTENT="-1">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/loader.css">
 
     <title>Hello, world!</title>
 
@@ -78,6 +79,23 @@
         }
 
       }
+      var startLatLon;
+      function beginCalibration(){
+
+        startLatLon = new LatLon(gps.latitude, gps.longitude);
+        console.log("begin calibration", startLatLon);
+        alert("take 10 normal steps");
+      }
+      function endCalibration(){
+        var endLatLon = new LatLon(gps.latitude, gps.longitude);
+        console.log("end calibration", endLatLon);
+        var d = startLatLon.distanceTo(endLatLon);
+        var stepSize=Math.round(d/10 * 100) / 100
+        d= Math.round(d * 100) / 100
+        console.log("distance " + d + " meters");
+
+        alert("distance " + d + " meters" + "\n" + (stepSize) + " meters/step");
+      }
       function deviceCheck(){
         if (Modernizr.geolocation) {
 
@@ -86,7 +104,38 @@
         }
       }
 
+      var myVar;
+      var everythingLoaded=false;
+      var count=0;
+      function isEverythingLoaded() {
+        document.getElementById("startContent").style.display = "none";
+        document.getElementById("loaderContent").style.display = "block";
+        //&& pedometer.hasPermission
+        //&& compass.hasPermission
+        if (gps && gps.hasPermission && gps.latitude !=0 && compass  && pedometer ){
+          everythingLoaded=true;
+          console.log("everythingLoaded");
+        } else{
+          if (gps && gps.hasPermission && gps.latitude !=0){
 
+          }
+        }
+
+        if (!everythingLoaded){
+          count++;
+
+          myVar = setTimeout(isEverythingLoaded, 1000);
+        } else{
+          showPage();
+        }
+      }
+
+      function showPage() {
+
+        document.getElementById("loaderContent").style.display = "none";
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("mainContent").style.display = "block";
+      }
     </script>
 
   </head>
@@ -94,8 +143,24 @@
   <body onload="deviceCheck();" >
 
 
-    v1.16
-    <button onclick="init();" type="button" class="btn btn-primary">Start</button>
+
+<div style="text-align:center;" id="startContent">
+  This game uses GPS, Compass and Motion.<BR><BR>
+  Don't play in the street, dummy!
+  <BR><BR>
+  <button onclick="isEverythingLoaded();" type="button" class="btn btn-primary">I accept</button>
+</div>
+<div id="loaderContent" style="display:none;">
+  <div id="loader"></div>
+  <div style="text-align:center;">
+    Loading....
+
+  </div>
+</div>
+
+<div id="mainContent" style="display:none;" class="animate-bottom">
+    v1.17
+
     <h2>Device Location</h2>
     <table>
       <tr>
@@ -139,11 +204,27 @@
       <tr>
         <td>Reset</td>
         <td><button onclick="pedometer.reset();" type="button" class="btn btn-primary">Reset</button>
+      </tr>
 
+      <tr>
+        <td>Calibration</td>
+        <td><button onclick="beginCalibration();" type="button" class="btn btn-primary">Begin</button>
+            <button onclick="endCalibration();" type="button" class="btn btn-primary">End</button>
+        </td>
+      </tr>
     </table>
-    <ul><li class="capture">capture</li><li class="devicemotion">devicemotion</li><li class="deviceorientation">deviceorientation</li><li class="geolocation">geolocation</li><li class="localstorage">localstorage</li><li class="setclasses">setclasses</li></ul>
 
+    <h2>Device Abilities</h2>
+    <ul>
+      <li class="capture">capture</li>
+      <li class="devicemotion">devicemotion</li>
+      <li class="deviceorientation">deviceorientation</li>
+      <li class="geolocation">geolocation</li>
+      <li class="localstorage">localstorage</li>
+      <li class="setclasses">setclasses</li>
+    </ul>
 
+</div>
 
 
   <script>
@@ -163,14 +244,13 @@
         x.innerHTML = "Latitude: " + position.coords.latitude +
         "<br>Longitude: " + position.coords.longitude;
       }
-var map,marker;
+var map,marker, mapLoaded=false;
   function initMap(position) {
     // The location of Uluru
     var uluru = {lat: position.coords.latitude, lng: position.coords.longitude};
     init();
     // The map, centered at Uluru
-    map = new google.maps.Map(
-        document.getElementById('map'), {zoom: 21, center: uluru});
+    map = new google.maps.Map(document.getElementById('map'), {zoom: 21, center: uluru});
     // The marker, positioned at Uluru
     //marker = new google.maps.Marker({position: uluru, map: map});
     marker=new google.maps.Marker({
@@ -191,6 +271,7 @@ var map,marker;
       marker.setPosition(uluru);
       gps.onChange(e.latLng.lat(), e.latLng.lng(),20,new Date());
    });
+   mapLoaded=true;
   }
 
   document.onkeydown = checkKey;

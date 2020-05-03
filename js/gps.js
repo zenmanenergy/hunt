@@ -4,7 +4,7 @@ function GPS(){
   //doesn't allow callback functions to access the parent object.
   var parent = this;
 
-  this.hasGPSPermission=false;
+  this.hasPermission=false;
   this.latitude=0;
   this.longitude=0;
   this.accuracy=0;
@@ -34,7 +34,7 @@ function GPS(){
   this.init=function (){
 
     if(navigator.geolocation) {
-      parent.hasGPSPermission=true;
+      parent.hasPermission=true;
        // timeout at 60000 milliseconds (60 seconds)
 
        navigator.geolocation.getCurrentPosition(
