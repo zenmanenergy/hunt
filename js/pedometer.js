@@ -240,7 +240,7 @@ function Pedometer(){
 	};
   // Compute total distance
   this.setDistance = function() {
-    this.distance = this.steps * this.stepSize * 100;//cm
+    this.distance = this.steps * this.stepSize;//cm
   };
 
 	// compute the threshold

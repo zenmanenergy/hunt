@@ -83,8 +83,23 @@
         }
 
       }
-      var startLatLon;
+
       function beginCalibration(){
+        pedometer.reset();
+        document.getElementById("calibrationMsg").innerHTML = "Walk to second marker";
+
+      }
+      function endCalibration(){
+        console.log(pedometer.steps);
+        if (pedometer.steps > 0){
+          stepSize = 10 /pedometer.steps;
+          stepSize= Math.round(stepSize * 100) / 100;
+          pedometer.setStepSize(stepSize);
+          document.getElementById("stepSize").innerHTML = pedometer.stepSize + "meter/step";
+        }
+      }
+      var startLatLon;
+      function beginGPSCalibration(){
         gps.getCurrentPosition(function(position){
           startLatLon = new LatLon(gps.latitude, gps.longitude);
           console.log("begin calibration", startLatLon);
@@ -93,7 +108,7 @@
           //alert("GO OUTSIDE! take 10 normal steps");
         });
       }
-      function endCalibration(){
+      function endGPSCalibration(){
         gps.getCurrentPosition(function(position){
           var endLatLon = new LatLon(gps.latitude, gps.longitude);
           console.log("end calibration", endLatLon);
@@ -172,7 +187,7 @@
 </div>
 
 <div id="mainContent" style="display:none;" class="animate-bottom">
-    v 1.22
+    v 1.23
 
     <h2>Device Location</h2>
     <table>
@@ -185,10 +200,10 @@
         <td>lng</td>
         <td id="lng">-</td>
       </tr>
-            <tr>
-              <td>accuracy</td>
-              <td id="accuracy">-</td>
-            </tr>
+      <tr>
+        <td>accuracy</td>
+        <td id="accuracy">-</td>
+      </tr>
 
     </table>
     <div id="map"></div>
@@ -305,6 +320,7 @@ function checkKey(e) {
 
     if (e.keyCode == '104') {  //e.keyCode=='37' is up arrow
         // up arrow
+        pedometer.addSteps(1);
         var p1 = new LatLon(gps.latitude, gps.longitude);
         var p2 = p1.destinationPoint(pedometer.stepSize, compass.heading);
 
