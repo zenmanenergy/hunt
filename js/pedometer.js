@@ -68,7 +68,12 @@ function Pedometer(){
     console.log("[Pedometer]","pedometer.onError event. This method can be overriden using: pedoemeter.onError=function(type, message, error){} ");
     console.log(type, message, error);
   };
-  
+  this.setStepSize=function(stepSize){ //stepSize in meters
+      this.stepSize=stepSize;
+  }
+
+
+  // Debugging tools
   this.setSteps=function(steps){
     this.steps=steps;
     this.setDistance();

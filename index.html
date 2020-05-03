@@ -70,6 +70,7 @@
 
         pedometer=new Pedometer();
         pedometer.init();
+        document.getElementById("stepSize").innerHTML = pedometer.stepSize + "meter/step";
         pedometer.onError=function(type, message, error){
           console.log(type +" ERROR!" ,message, error);
         }
@@ -84,7 +85,7 @@
         gps.getCurrentPosition(function(position){
           startLatLon = new LatLon(gps.latitude, gps.longitude);
           console.log("begin calibration", startLatLon);
-          alert("take 10 normal steps");
+          alert("GO OUTSIDE! take 10 normal steps");
         });
       }
       function endCalibration(){
@@ -97,6 +98,10 @@
           console.log("distance " + d + " meters");
 
           alert("distance " + d + " meters" + "\n" + (stepSize) + " meters/step");
+          if (stepSize > 0){
+            pedometer.setStepSize(stepSize);
+            document.getElementById("stepSize").innerHTML = pedometer.stepSize + "meter/step";
+          }
         });
 
       }
@@ -163,7 +168,7 @@
 </div>
 
 <div id="mainContent" style="display:none;" class="animate-bottom">
-    v1.18
+    v1.19
 
     <h2>Device Location</h2>
     <table>
@@ -204,6 +209,10 @@
       <tr>
         <td>distance</td>
         <td id="distance">-</td>
+      </tr>
+      <tr>
+        <td>Step Size</td>
+        <td id="stepSize">-</td>
       </tr>
       <tr>
         <td>Reset</td>
