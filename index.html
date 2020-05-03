@@ -11,7 +11,14 @@
 
     <title>Hello, world!</title>
 
-
+    <style>
+    #map {
+      height: 300px;  /* The height is 400 pixels */
+      width: 300px;  /* The width is the width of the web page */
+     }
+    ul{-webkit-column-count: 3;-moz-column-count: 3;column-count: 3;}li{color:green}.no-capture li.capture{ color: red; }.no-devicemotion li.devicemotion{ color: red; }.no-deviceorientation li.deviceorientation{ color: red; }.no-geolocation li.geolocation{ color: red; }.no-localstorage li.localstorage{ color: red; }.no-setclasses li.setclasses{ color: red; }
+  </style>
+    <script src="js/modern.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/gps.js" type="text/javascript" charset="utf-8" defer></script>
     <script src="js/compass.js" type="text/javascript" charset="utf-8" defer></script>
     <script src="js/pedometer.js" type="text/javascript" charset="utf-8" defer></script>
@@ -27,7 +34,7 @@
 
 
       function init(){
-      
+
 
         gps=new GPS();
         gps.init();
@@ -63,11 +70,22 @@
         }
 
       }
+      function deviceCheck(){
+        if (Modernizr.geolocation) {
+
+        } else {
+
+        }
+      }
+
+
     </script>
 
   </head>
 
-  <body >
+  <body onload="deviceCheck();" >
+
+
     v1.15
     <button onclick="init();" type="button" class="btn btn-primary">Start</button>
     <h2>Device Location</h2>
@@ -83,24 +101,9 @@
       </tr>
 
     </table>
+    <div id="map"></div>
     <h2>Device Orientation</h2>
     <table>
-      <!---<tr>
-        <td>Event Supported</td>
-        <td id="DeviceOrientationMsg">-</td>
-      </tr>
-      <tr>
-        <td>Tilt Left/Right [gamma]</td>
-        <td id="doTiltLR">-</td>
-      </tr>
-      <tr>
-        <td>Tilt Front/Back [beta]</td>
-        <td id="doTiltFB">-</td>
-      </tr>
-      <tr>
-        <td>Direction [alpha]</td>
-        <td id="doDirection">-</td>
-      </tr> --->
       <tr>
         <td>Heading</td>
         <td id="heading">-</td>
@@ -117,38 +120,6 @@
      </table>
     <h2>Device Motion</h2>
     <table>
-
-      <!---
-      <tr>
-        <td>Event Supported</td>
-        <td id="DeviceMotionMsg">-</td>
-      </tr>
-
-      <tr>
-        <td>accelX</td>
-        <td id="accelX">-</td>
-      </tr>
-      <tr>
-        <td>accelY</td>
-        <td id="accelY">-</td>
-      </tr>
-      <tr>
-        <td>accelZ</td>
-        <td id="accelZ">-</td>
-      </tr>
-      <tr>
-        <td>rotationRate</td>
-        <td id="moRotation">-</td>
-      </tr>
-      <tr>
-        <td>interval</td>
-        <td id="moInterval">-</td>
-      </tr>
-      <tr>
-        <td>acc_norm</td>
-        <td id="acc_norm">-</td>
-      </tr>
-      --->
       <tr>
         <td>steps</td>
         <td id="steps">-</td>
@@ -162,12 +133,119 @@
         <td><button onclick="pedometer.reset();" type="button" class="btn btn-primary">Reset</button>
 
     </table>
-
-  </body>
-
+    <ul><li class="capture">capture</li><li class="devicemotion">devicemotion</li><li class="deviceorientation">deviceorientation</li><li class="geolocation">geolocation</li><li class="localstorage">localstorage</li><li class="setclasses">setclasses</li></ul>
 
 
 
+
+  <script>
+
+      var x = document.getElementById("demo");
+
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(initMap);
+        } else {
+          x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+      }
+
+      function showPosition(position) {
+        initMap()
+        x.innerHTML = "Latitude: " + position.coords.latitude +
+        "<br>Longitude: " + position.coords.longitude;
+      }
+var map,marker;
+  function initMap(position) {
+    // The location of Uluru
+    var uluru = {lat: position.coords.latitude, lng: position.coords.longitude};
+    init();
+    // The map, centered at Uluru
+    map = new google.maps.Map(
+        document.getElementById('map'), {zoom: 21, center: uluru});
+    // The marker, positioned at Uluru
+    //marker = new google.maps.Marker({position: uluru, map: map});
+    marker=new google.maps.Marker({
+        position: uluru,
+        map: map,
+        icon: {
+            path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+            scale: 6,
+            fillColor: "red",
+            fillOpacity: 0.8,
+            strokeWeight: 2,
+            rotation: 0 //this is how to rotate the pointer
+        }
+    });
+    map.addListener('click', function(e) {
+      var uluru = {lat: e.latLng.lat(), lng: e.latLng.lng()};
+      //var marker = new google.maps.Marker({position: uluru, map: map});
+      marker.setPosition(uluru);
+      gps.onChange(e.latLng.lat(), e.latLng.lng(),20,new Date());
+   });
+  }
+
+  document.onkeydown = checkKey;
+
+function checkKey(e) {
+
+    e = e || window.event;
+
+    if (e.keyCode == '38') {
+        // up arrow
+    }
+    else if (e.keyCode == '40') {
+        // down arrow
+    }
+    else if (e.keyCode == '37') {
+       // left arrow
+       if (!compass.heading){
+         compass.setHeading(0);
+       }
+       compass.heading -=45;
+       if (compass.heading < 0){
+         compass.heading=315;
+       }
+       compass.setHeading(compass.heading);
+       marker.setIcon({
+            path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+            scale: 6,
+            fillColor: "red",
+            fillOpacity: 0.8,
+            strokeWeight: 2,
+            rotation: compass.heading
+        });
+    }
+    else if (e.keyCode == '39') {
+       // right arrow
+       if (!compass.heading){
+         compass.setHeading(0);
+       }
+       compass.heading +=45;
+       if (compass.heading >360){
+         compass.heading=45;
+       }
+       compass.setHeading(compass.heading);
+       marker.setIcon({
+            path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+            scale: 6,
+            fillColor: "red",
+            fillOpacity: 0.8,
+            strokeWeight: 2,
+            rotation: compass.heading
+        });
+    }
+
+}
+      </script>
+      <!--Load the API from the specified URL
+      * The async attribute allows the browser to render the page while the API loads
+      * The key parameter will contain your own API key (which is not needed for this tutorial)
+      * The callback parameter executes the initMap() function
+      -->
+      <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3qnE6FXWpsuiPvV8BHCffoHNfrCg7cfY&callback=getLocation">
+      </script>
 
 
 
