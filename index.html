@@ -85,7 +85,9 @@
         gps.getCurrentPosition(function(position){
           startLatLon = new LatLon(gps.latitude, gps.longitude);
           console.log("begin calibration", startLatLon);
-          alert("GO OUTSIDE! take 10 normal steps");
+          document.getElementById("calibrationMsg").innerHTML = "GO outside take 10 steps";
+
+          //alert("GO OUTSIDE! take 10 normal steps");
         });
       }
       function endCalibration(){
@@ -96,10 +98,9 @@
           var stepSize=Math.round(d/10 * 100) / 100
           d= Math.round(d * 100) / 100
           console.log("distance " + d + " meters");
-
-          alert("distance " + d + " meters" + "\n" + (stepSize) + " meters/step");
+          document.getElementById("calibrationMsg").innerHTML="";
+          //alert("distance " + d + " meters" + "\n" + (stepSize) + " meters/step");
           if (stepSize > 0){
-            alert("stepSize!",stepSize);
             pedometer.setStepSize(stepSize);
             document.getElementById("stepSize").innerHTML = pedometer.stepSize + "meter/step";
           }
@@ -169,7 +170,7 @@
 </div>
 
 <div id="mainContent" style="display:none;" class="animate-bottom">
-    v1.19
+    v1.20
 
     <h2>Device Location</h2>
     <table>
@@ -223,6 +224,7 @@
       <tr>
         <td>Calibration</td>
         <td><button onclick="beginCalibration();" type="button" class="btn btn-primary">Begin</button>
+            <div id="calibrationMsg"></div>
             <button onclick="endCalibration();" type="button" class="btn btn-primary">End</button>
         </td>
       </tr>
