@@ -11,7 +11,7 @@ function GPS(){
   this.timestamp;
   this.planetRadius=6378137; //meters
   this.options={
-    enableHighAccuracy: false,
+    enableHighAccuracy: true,
     timeout: 5000,
     maximumAge: 0
   };

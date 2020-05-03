@@ -47,6 +47,7 @@
         gps.onChange=function(latitude, longitude, accuracy, timestamp){
           document.getElementById("lat").innerHTML = latitude;
           document.getElementById("lng").innerHTML = longitude;
+          document.getElementById("accuracy").innerHTML = accuracy;
           var uluru = {lat: latitude, lng: longitude};
           //var marker = new google.maps.Marker({position: uluru, map: map});
           marker.setPosition(uluru);
@@ -127,7 +128,6 @@
         //&& compass.hasPermission
         if (gps && gps.hasPermission && gps.latitude !=0 && compass  && pedometer ){
           everythingLoaded=true;
-          console.log("everythingLoaded");
         } else{
           if (gps && gps.hasPermission && gps.latitude !=0){
 
@@ -172,7 +172,7 @@
 </div>
 
 <div id="mainContent" style="display:none;" class="animate-bottom">
-    v1.21
+    v1.22
 
     <h2>Device Location</h2>
     <table>
@@ -185,6 +185,10 @@
         <td>lng</td>
         <td id="lng">-</td>
       </tr>
+            <tr>
+              <td>accuracy</td>
+              <td id="accuracy">-</td>
+            </tr>
 
     </table>
     <div id="map"></div>
