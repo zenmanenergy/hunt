@@ -9,6 +9,7 @@ function GPS(){
   this.longitude=0;
   this.accuracy=0;
   this.timestamp;
+  this.planetRadius=6378137; //meters
   this.options={
     enableHighAccuracy: false,
     timeout: 5000,
@@ -22,6 +23,14 @@ function GPS(){
     console.log("[GPS]","gps.onError event. This method can be overriden using: gps.onError=function(type, message, error){} ");
     console.log(type, message, error);
   };
+  this.setPosition=function(latitude,longitude,accuracy,timestamp){
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.accuracy = accuracy;
+    this.timestamp = timestamp;
+    this.onChange(this.latitude, this.longitude, this.accuracy, this.timestamp);
+
+  }
   this.init=function (){
 
     if(navigator.geolocation) {
@@ -31,11 +40,7 @@ function GPS(){
        navigator.geolocation.getCurrentPosition(
 
            function (position) {
-              parent.latitude = position.coords.latitude;
-              parent.longitude = position.coords.longitude;
-              parent.accuracy = position.coords.accuracy;
-              parent.timestamp = new Date(position.timestamp);
-              parent.onChange(parent.latitude, parent.longitude, parent.accuracy, parent.timestamp);
+              parent.setPosition(position.coords.latitude, position.coords.longitude, position.coords.accuracy, new Date(position.timestamp));
            },
             function (err) {
              if(err.code == 1) {

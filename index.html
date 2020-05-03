@@ -19,16 +19,21 @@
     ul{-webkit-column-count: 3;-moz-column-count: 3;column-count: 3;}li{color:green}.no-capture li.capture{ color: red; }.no-devicemotion li.devicemotion{ color: red; }.no-deviceorientation li.deviceorientation{ color: red; }.no-geolocation li.geolocation{ color: red; }.no-localstorage li.localstorage{ color: red; }.no-setclasses li.setclasses{ color: red; }
   </style>
     <script src="js/modern.js" type="text/javascript" charset="utf-8"></script>
-    <script src="js/gps.js" type="text/javascript" charset="utf-8" defer></script>
-    <script src="js/compass.js" type="text/javascript" charset="utf-8" defer></script>
-    <script src="js/pedometer.js" type="text/javascript" charset="utf-8" defer></script>
+
+    <script src="js/latlon.js" type="text/javascript" charset="utf-8" ></script>
+    <script src="js/latlonDMS.js" type="text/javascript" charset="utf-8" ></script>
+    <script src="js/gps.js" type="text/javascript" charset="utf-8" ></script>
+    <script src="js/compass.js" type="text/javascript" charset="utf-8" ></script>
+    <script src="js/pedometer.js" type="text/javascript" charset="utf-8" ></script>
     <script type="text/javascript">
+
       var latitude, longitude;
 
       var app={};
       var podo;
       var compass;
       var gps;
+      var pedometer;
 
 
 
@@ -41,10 +46,13 @@
         gps.onChange=function(latitude, longitude, accuracy, timestamp){
           document.getElementById("lat").innerHTML = latitude;
           document.getElementById("lng").innerHTML = longitude;
-        }
+          var uluru = {lat: latitude, lng: longitude};
+          //var marker = new google.maps.Marker({position: uluru, map: map});
+          marker.setPosition(uluru);
+        };
         gps.onError=function(type, message, error){
           console.log(type +" ERROR!" ,message, error);
-        }
+        };
 
         // requestMotionPermission();
 
@@ -191,13 +199,19 @@ function checkKey(e) {
 
     e = e || window.event;
 
-    if (e.keyCode == '38') {
+
+    if (e.keyCode == '104') {  //e.keyCode=='37' is up arrow
         // up arrow
+        var p1 = new LatLon(gps.latitude, gps.longitude);
+        var p2 = p1.destinationPoint(pedometer.stepSize, compass.heading);
+
+        gps.setPosition(p2.lat,p2.lon);
+
     }
     else if (e.keyCode == '40') {
         // down arrow
     }
-    else if (e.keyCode == '37') {
+    else if (e.keyCode == '100') {   //e.keyCode=='37' is left arrow
        // left arrow
        if (!compass.heading){
          compass.setHeading(0);
@@ -216,7 +230,7 @@ function checkKey(e) {
             rotation: compass.heading
         });
     }
-    else if (e.keyCode == '39') {
+    else if (e.keyCode == '102') { //e.keyCode=='39' i  s right arrow
        // right arrow
        if (!compass.heading){
          compass.setHeading(0);

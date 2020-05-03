@@ -68,6 +68,20 @@ function Pedometer(){
     console.log("[Pedometer]","pedometer.onError event. This method can be overriden using: pedoemeter.onError=function(type, message, error){} ");
     console.log(type, message, error);
   };
+  
+  this.setSteps=function(steps){
+    this.steps=steps;
+    this.setDistance();
+    this.onChange(this.steps,this.distance);
+  };
+  this.addSteps=function(count){
+    if(!count){
+      var count=1;
+    }
+    this.steps=this.steps+count;
+    this.setSteps(this.steps);
+    return count * this.stepSize * 100;
+  };
   this.init = function (){
     try{
 
@@ -118,7 +132,7 @@ function Pedometer(){
 	this.stepArr   = new Array(); // steps in 2 seconds
 
   this.weight    = 70; // weight of the pedestrian
-	this.stepSize  = 50; // step size of the pedestrian (cm)
+	this.stepSize  = .50; // step size of the pedestrian (cm)
 	this.distance  = 0;  // total distance (cm)
 	this.calory    = 0;  // calory burned (C)
 	this.speed     = 0;  // instantaneous speed of the pedestrian (m/s)
@@ -155,7 +169,6 @@ function Pedometer(){
 
 		if (isSensibility && isOverThreshold && isValidStep) {
 			this.steps++;
-      this.onChange(this.steps,this.distance);
 			this.stepArr.push(1);
 			this.stepArr.shift();
 
@@ -169,6 +182,7 @@ function Pedometer(){
 			} else {
 				this.setDistance();
 			};
+      this.setSteps(this.steps,this.distance);
 		} else {
 			this.stepArr.push(0);
 			this.stepArr.shift();
@@ -221,7 +235,7 @@ function Pedometer(){
 	};
   // Compute total distance
   this.setDistance = function() {
-    this.distance = this.steps * this.stepSize;//cm
+    this.distance = this.steps * this.stepSize * 100;//cm
   };
 
 	// compute the threshold
