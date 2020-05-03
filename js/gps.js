@@ -31,6 +31,27 @@ function GPS(){
     this.onChange(this.latitude, this.longitude, this.accuracy, this.timestamp);
 
   }
+  this.getCurrentPosition=function(onComplete){
+    navigator.geolocation.getCurrentPosition(
+
+        function (position) {
+          console.log("position",position);
+          parent.setPosition(position.coords.latitude, position.coords.longitude, position.coords.accuracy, new Date(position.timestamp));
+          onComplete();
+
+        },
+         function (err) {
+          if(err.code == 1) {
+            parent.onError("[GPS]","Error: Access is denied!",err);
+
+          } else if( err.code == 2) {
+             parent.onError("[GPS]","Error: Position is unavailable!",err);
+          } else{
+            parent.onError("[GPS]",err.code,err);
+          }
+       },
+        this.options);
+  }
   this.init=function (){
 
     if(navigator.geolocation) {
