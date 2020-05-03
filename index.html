@@ -99,6 +99,7 @@
 
           alert("distance " + d + " meters" + "\n" + (stepSize) + " meters/step");
           if (stepSize > 0){
+            alert("stepSize!",stepSize);
             pedometer.setStepSize(stepSize);
             document.getElementById("stepSize").innerHTML = pedometer.stepSize + "meter/step";
           }
